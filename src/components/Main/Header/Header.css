@@ -1,0 +1,25 @@
+.app-header {
+    background-color: #42313A;
+    padding-bottom: 1px;
+    color:#F1DCC9;
+}
+.logo {
+    text-align: center;
+}
+.greetings {
+  font: normal 1.2rem 'century gothic', arial, sans-serif;
+  margin: 15px;
+}
+.output {
+    color: #fff;
+    font-weight: bold;
+}
+
+.logout_btn {
+    float: right;
+    height: auto;
+    margin-top: -4px;
+    background-color: #6C2D2C;
+    border: 1px solid white;
+    color: #fff;
+}

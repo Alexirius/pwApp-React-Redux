@@ -1,0 +1,35 @@
+body {
+    background-color:#F1DCC9;
+    margin: 0;
+    font: normal 1rem 'century gothic', arial, sans-serif;
+}
+h1 {
+    font: normal 1.8rem 'century gothic', arial, sans-serif;
+    margin: 0;
+    padding-top: 8px;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  
+}
+h2 {
+    font: normal 1.5rem 'century gothic', arial, sans-serif;
+    color: #42313A;
+}
+.warning {
+    color: red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.message {
+    font-size: 1.1rem;
+}
+::-webkit-scrollbar{
+    width: 7px;
+    background:#bbb;
+    border-radius: 7px;
+}
+::-webkit-scrollbar-thumb {
+    background-color:#ddd;
+   border-radius: 7px;
+}

@@ -1,0 +1,31 @@
+.autocomplete-wrap {
+    position: relative;
+    box-sizing: border-box;
+}
+#autocomplete-list {
+    box-sizing: content-box;
+    text-align: left;
+    position: absolute;
+    top: 22px;
+    border: 2px solid #42313A;
+    max-height: 400px;
+    overflow-y: auto;
+    left: 0;
+    width: 220px;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #eee;
+}
+.listitem {
+    padding: 4px 10px;
+}
+.listitem.focused {
+    background-color: wheat;
+}
+.listitem:hover {
+    background-color: #9F4636;
+    color: #fff;
+}
+#autocomplete_field {
+    width: 200px;
+}

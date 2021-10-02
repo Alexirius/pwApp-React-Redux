@@ -1,0 +1,31 @@
+.filter {
+    text-align: center;
+}
+.filter input, .filter button {
+    margin-bottom: 15px;
+    margin-left: 5px;
+}
+.filter input {
+    margin-right: 0px;
+    width: 200px;
+}
+.filter .clear {
+    margin-left: -15px;
+    border: 2px solid #42313A;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    padding: 3px;
+    padding-bottom: 4px;
+    background-color: white;
+}
+.filter .clear:hover {
+    background-color: wheat;
+    color: #42313A;
+}
+.filter button {
+    background-color:#F1DCC9;
+}
+.filter button.active {
+    color: white;
+    background-color: #6C2D2C;
+}

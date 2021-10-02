@@ -1,0 +1,38 @@
+.login-page {
+    text-align: center;
+    display: flex;
+}
+.login-form {
+    width: 400px;
+    max-width: 400px;
+    margin: auto;
+}
+.login-form input, .login-form button {
+    font-size: 1rem;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    border: 2px solid #42313A;
+    border-radius: 6px;
+}
+.login-form button {
+    font-weight: bold;
+    background: #6C2D2C;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: #fff;
+    cursor: pointer;
+}
+#register-btn {
+    color: #42313A;
+    background: wheat;
+}
+#login-btn:hover {
+    background-color: #9F4636;
+}
+#register-btn:hover {
+    background-color: #9F4636;
+    color: white;
+}

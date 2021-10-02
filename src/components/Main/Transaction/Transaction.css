@@ -1,0 +1,11 @@
+.transaction {
+    text-align: center;
+}
+.transaction .send_btn {
+    color: #fff;
+    background-color: #6C2D2C;
+}
+#amount {
+    width: 60px;
+}
+  

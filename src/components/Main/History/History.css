@@ -1,0 +1,21 @@
+.history {
+    text-align: center;
+}
+.history-table {
+    margin: auto;
+    background-color: white;
+    text-align: left;
+    border: 2px solid #42313A;
+    border-radius: 6px;
+    padding: 0px;
+}
+.history-table td {
+    padding: 5px 10px;
+    border-top: 1px solid #42313A;
+}
+.history-table th {
+    padding: 5px 10px;
+    text-align: center;
+    background-color: wheat;
+    color: #42313A ;
+}
