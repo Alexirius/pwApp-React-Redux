@@ -10,7 +10,7 @@ export default class Login extends React.Component {
         password: '',
         username: '',
         passConfirm: '',
-        newAccount: false
+        isNewAccount: false
     }
     state = this.initialState;
 
@@ -23,25 +23,25 @@ export default class Login extends React.Component {
     
     onSubmit = (ev) => {
         ev.preventDefault();
-        const {username, email, password, newAccount, passConfirm} = this.state;
+        const {username, email, password, passConfirm, isNewAccount} = this.state;
         const {handleLogin} = this.props;
-        if (newAccount) {               // NEW user
+        if (isNewAccount) {               // NEW user
             handleLogin({email, password, username, passConfirm}, true);
         } else {                        // REGISTERED user
             handleLogin({email, password}, false);
         }
     }
     
-    registerMode = (newAcc) => {        // user is New (true) or Registered (false)
-        this.setState({newAccount: newAcc});
+    registerMode = (isNew) => {        // user is New (true) or Registered (false)
+        this.setState({isNewAccount: isNew});
         this.props.clearErr();
     };
 
     render() {
-        const {email, password, username, passConfirm, newAccount} = this.state;
+        const {email, password, username, passConfirm, isNewAccount} = this.state;
         const {failed} = this.props;
 
-        const formContent = (newAccount) ? 
+        const formContent = (isNewAccount) ? 
             <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
                 onChange= {this.handleChange} onModeChange= {()=>this.registerMode(false)} />
         :

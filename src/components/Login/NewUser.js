@@ -1,10 +1,8 @@
 // Register New User form
 
-import React from "react";
-
 const NewUser = ({email, username, password, passConfirm, onChange, onModeChange}) => {
     return (
-        <React.Fragment>
+        <>
             <h2>Get Free PW account</h2>
             <input type="email" name="email" value={email} required
                 placeholder="email" onChange={onChange} />
@@ -17,7 +15,7 @@ const NewUser = ({email, username, password, passConfirm, onChange, onModeChange
             <button id="login-btn" type="submit">submit</button>
             <button id="register-btn" type="button" onClick={onModeChange}>
                 Have PW Account</button>
-        </React.Fragment>
+        </>
     )
 }
 export default NewUser;

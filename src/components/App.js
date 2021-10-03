@@ -37,10 +37,10 @@ export default class App extends React.Component {
     .then((res) => {
       const {name, id, balance} = res;
       this.setState({
-        token: token,
+        token,
+        balance,
         userName: name,
         userId: id,
-        balance: balance,
         failed: false
       })
     })
@@ -66,7 +66,6 @@ export default class App extends React.Component {
   }
 
   handleLogout = () => {
-    console.log("this",this);
     this.setState(this.initialState);
   }
 

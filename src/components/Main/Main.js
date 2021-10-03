@@ -35,7 +35,8 @@ export default class Main extends React.Component {
 	}
 
     render () {
-        const {token, clearErr, failed, throwLocalError, catchError, updateBalance, ...headerProps} = this.props;
+        const {token, clearErr, failed, throwLocalError, catchError, 
+                updateBalance, ...headerProps} = this.props;
         const {historyArray, loading} = this.state;
         const spinner = (loading) ? <Spinner /> : null;
         return (

@@ -42,7 +42,8 @@ export default class Transaction extends React.Component {
 
 	handleConfirm = (confirmed) => {				// Send request to register new
 													// transaction if user confirmed
-		this.setState({isConfirmNeeded: false})
+		this.setState({isConfirmNeeded: false});
+
 		if (confirmed) {
 			const {recipient, amount} = this.state;
 			const {token, catchError, updateTransList, clearErr, updateBalance} = this.props;
@@ -68,8 +69,9 @@ export default class Transaction extends React.Component {
 		const messageDiv = (message.length) ? <div className = 'message'>{message}</div> : ''
 		const dialog = (isConfirmNeeded) ? <Dialog header='Confirm Operation'
 							message = {`Send ${amount} PW to ${recipient}?`}
-							handleYes = {()=>this.handleConfirm(true)}
-							handleNo = {()=>this.handleConfirm(false)} /> : null;
+							handleYes = {() => this.handleConfirm(true)}
+							handleNo = {()=>this.handleConfirm(false)} />
+						: null;
 
 		return (
 			<div>
