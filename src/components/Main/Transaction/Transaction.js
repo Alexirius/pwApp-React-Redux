@@ -34,7 +34,7 @@ export default class Transaction extends React.Component {
 		clearErr();
 		
 		if (!amount || parseInt(amount) <= 0)  {		// Local validation
-			throwLocalError('',"Invalid PW Amount");
+			throwLocalError("Invalid PW Amount");
 			return false;
 		}
 		this.setState({isConfirmNeeded: true});
@@ -62,9 +62,10 @@ export default class Transaction extends React.Component {
 	render() {
 
 		const {recipient, amount, isConfirmNeeded, message} = this.state;
-		const {token, failed, catchError, clearErr} = this.props;
-        const warning = (failed)? <div className="warning">
-                Error {failed.status}: {failed.text}
+		const {token, error, catchError, clearErr} = this.props;
+		console.log(error);
+        const warning = (error)? <div className="warning">
+                {error}
             </div> : null;
 		const messageDiv = (message.length) ? <div className = 'message'>{message}</div> : ''
 		const dialog = (isConfirmNeeded) ? <Dialog header='Confirm Operation'

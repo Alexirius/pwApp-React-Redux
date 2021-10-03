@@ -39,7 +39,7 @@ export default class Login extends React.Component {
 
     render() {
         const {email, password, username, passConfirm, isNewAccount} = this.state;
-        const {failed} = this.props;
+        const {error} = this.props;
 
         const formContent = (isNewAccount) ? 
             <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
@@ -48,9 +48,9 @@ export default class Login extends React.Component {
             <RegisteredUser email={email} password={password}
                 onChange={this.handleChange} onModeChange={()=>{this.registerMode(true)}} />;
 
-        const warning = (failed) ? 
+        const warning = (error) ? 
                 <div className="warning">
-                    Error {failed.status}: {failed.text}
+                    {error}
                 </div>
         : null;
 

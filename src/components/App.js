@@ -13,23 +13,23 @@ export default class App extends React.Component {
     userId: '',
     userName: '',
     balance: '',
-    failed: false   // failed: possible values: obj {status,text} || false 
+    error: null
   }
 
   state = this.initialState;
 
   handleLogin = (passObj, newAccount) => {
     if (newAccount) {
-      const {password, passConfirm} = passObj;
+      const { password, passConfirm } = passObj;
       if (password !== passConfirm) {
-        this.throwLocalError('', 'Password confirm mismatch!');
-        this.setState({token: ''});
+        this.throwLocalError('Password confirm mismatch!');
+        this.setState({ token: '' });
         return;
       }
     }
     this.api.getToken(passObj, newAccount)
-      .then((token) => {this.loginOk(token)})
-      .catch((err) => {this.catchError(err)});
+      .then((token) => { this.loginOk(token) })
+      .catch((err) => { this.catchError(err) });
   }
 
   loginOk = (token) => {this.api.getUserInfo(token)   // Sends request to server 
@@ -41,7 +41,7 @@ export default class App extends React.Component {
         balance,
         userName: name,
         userId: id,
-        failed: false
+        error: null
       })
     })
     .catch((err) => {this.catchError(err)});
@@ -51,18 +51,17 @@ export default class App extends React.Component {
     this.setState({balance});
   }
 
-  throwLocalError = (status, text) => (
-    this.setState({failed: {status, text}})
+  throwLocalError = (text) => (
+    this.setState({error: `Еrror: ${text}`})
   )
 
   catchError = (err) => {
     console.log(err);
-    const {status, text} = err;
-    this.setState({failed:{status, text}});
+    this.setState({error: err.toString()});
   }
 
   clearErr = () => {
-    this.setState({failed: false});
+    this.setState({error: null});
   }
 
   handleLogout = () => {
@@ -70,9 +69,9 @@ export default class App extends React.Component {
   }
 
   render() {
-    const {token, userName, balance, failed} = this.state;
+    const {token, userName, balance, error} = this.state;
     const appContent = (token) ?
-      <Main userName={userName} balance={balance} token={token} failed={failed} 
+      <Main userName={userName} balance={balance} token={token} error={error} 
             handleLogout={this.handleLogout}
             updateBalance={this.updateBalance}
             clearErr={this.clearErr}
@@ -80,7 +79,7 @@ export default class App extends React.Component {
             catchError={this.catchError} />
       : 
       <Login handleLogin={this.handleLogin}
-            clearErr={this.clearErr} failed={failed} />;
+            clearErr={this.clearErr} error={error} />;
     return (        
       <div className="App">
         {appContent}

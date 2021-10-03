@@ -8,7 +8,7 @@ props:
     getData: async function => promise - gets autocomlete list, args: (...getDataArgs, search string);
     getDataArgs: array - args list for getData function;
     onSelect: function - autocomplete select handler, arg: (selected string);
-    catchError: function - error handler, arg: (error);
+    catchError: function - error handler, arg: (error: error);
     clearErr: function - clears error, arg: none.
 */
  

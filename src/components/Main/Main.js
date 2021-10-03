@@ -35,14 +35,14 @@ export default class Main extends React.Component {
 	}
 
     render () {
-        const {token, clearErr, failed, throwLocalError, catchError, 
+        const {token, clearErr, error, throwLocalError, catchError, 
                 updateBalance, ...headerProps} = this.props;
         const {historyArray, loading} = this.state;
         const spinner = (loading) ? <Spinner /> : null;
         return (
             <div className = 'main'>
                 <Header {...headerProps} />
-                <Transaction token = {token} clearErr={clearErr} failed={failed} 
+                <Transaction token = {token} clearErr={clearErr} error={error} 
                     throwLocalError={throwLocalError} catchError={catchError}
                     updateTransList={this.updateTransList}
                     updateBalance={updateBalance} />

@@ -1,13 +1,13 @@
 /*	Reusable Yes/No Dialog with Keyboard support
 
 Supported keys: <Y>, <N>, <Esc>, <Enter>, <Left> && <Right> arrows.
-Also click out of Dialog area is used for disabling Dialog.
+Also click out of Dialog area is used for closing Dialog with "No" answer.
 
 props:
     header: string,
     message: string,
     handleYes: function,
-    handleNo: function
+    handleNo: function.
 */
 
 import React from 'react';
@@ -41,15 +41,15 @@ export default class Dialog extends React.Component {
         ev.preventDefault();
         const {keyCode} = ev;
         const {handleYes, handleNo} = this.props;
-        if (keyCode===37 || keyCode===39) {                         // Left || Right Arrows
+        if (keyCode===37 || keyCode===39) {                         // <Left> || <Right> arrows keys
             this.setState((state)=>{
                 return {activeYes: !state.activeYes}
             })
-        } else if (keyCode===13) {                                  // Enter key
+        } else if (keyCode===13) {                                  // <Enter> key
             return (this.state.activeYes) ? handleYes() : handleNo();
         }
-        else if (keyCode===27 || keyCode===78) return handleNo()    // Esc || N key
-        else if (keyCode===89) return handleYes()                   // Y key
+        else if (keyCode===89) return handleYes()                   // <Y> key
+        else if (keyCode===27 || keyCode===78) return handleNo()    // <Esc> || <N> key
 
     }
 
@@ -61,8 +61,8 @@ export default class Dialog extends React.Component {
                 <div id="dialog-content">
                     <div id="dialog-header">{header}</div>
                     <div id="dialog-text">{message}</div>
-                    <button className={(activeYes)?'btn active':'btn'} id="yes-btn" onClick= {handleYes}>Yes</button>
-                    <button className={(activeYes)?'btn':'btn active'} id="no-btn" onClick={handleNo}>No</button>
+                    <button className={(activeYes)?'btn active':'btn'} onClick= {handleYes}>Yes</button>
+                    <button className={(activeYes)?'btn':'btn active'} onClick={handleNo}>No</button>
                 </div>
             </div>
         )
