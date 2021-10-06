@@ -1,12 +1,10 @@
 import React from "react";
 import Main from "./Main/Main";
 import Login from "./Login/Login";
-import ApiService from "../services/api-service";
+import withPwApi from "./hoc-helpers/withPwApi";
 import './App.css';
 
-export default class App extends React.Component {
-
-  api = new ApiService();
+class App extends React.Component {
 
   initialState ={
     token: '',
@@ -27,12 +25,12 @@ export default class App extends React.Component {
         return;
       }
     }
-    this.api.getToken(passObj, newAccount)
+    this.props.pwApi.getToken(passObj, newAccount)
       .then((token) => { this.loginOk(token) })
       .catch((err) => { this.catchError(err) });
   }
 
-  loginOk = (token) => {this.api.getUserInfo(token)   // Sends request to server 
+  loginOk = (token) => {this.props.pwApi.getUserInfo(token)   // Sends request to server 
                                                       // for logged user info
     .then((res) => {
       const {name, id, balance} = res;
@@ -77,13 +75,14 @@ export default class App extends React.Component {
             clearErr={this.clearErr}
             throwLocalError={this.throwLocalError}
             catchError={this.catchError} />
-      : 
+    : 
       <Login handleLogin={this.handleLogin}
             clearErr={this.clearErr} error={error} />;
-    return (        
-      <div className="App">
-        {appContent}
-      </div>
+    return (
+        <div className="App">
+          {appContent}
+        </div>
     )
   }
 };
+export default withPwApi(App);

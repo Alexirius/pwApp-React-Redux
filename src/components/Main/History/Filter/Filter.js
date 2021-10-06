@@ -29,7 +29,7 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
                     placeholder='filter' onChange = {(ev) => onFilterChange(ev.target.value)} 
                     title='Type smth to filter by any field, e.g. "9/11/2001" (by Date) or "G.Bush Jr." (by Name)' />
                 <button className="clear"
-                        onClick={onFilterClear}>×</button>
+                        onClick={onFilterClear}>&times;</button>
             </span>
             <span>
                 {buttons}

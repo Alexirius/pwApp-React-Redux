@@ -5,7 +5,7 @@ props:
     value: string;
     placeholder: string;
     handleChange: function - field value change handler, arg: (event);
-    getData: async function => promise - gets autocomlete list, args: (...getDataArgs, search string);
+    getData: async function => promise - gets autocomlete list, args: (any);
     getDataArgs: array - args list for getData function;
     onSelect: function - autocomplete select handler, arg: (selected string);
     catchError: function - error handler, arg: (error: error);

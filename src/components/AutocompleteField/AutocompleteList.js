@@ -14,5 +14,4 @@ const AutocompleteList = ({list, focusedItem, onItemClick}) => {
         </div>
     );
 }
-
 export default AutocompleteList;

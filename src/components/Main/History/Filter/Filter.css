@@ -19,7 +19,8 @@
     background-color: white;
 }
 .filter .clear:hover {
-    background-color: wheat;
+    font-weight: bold;
+    background-color: white;
     color: #42313A;
 }
 .filter button {

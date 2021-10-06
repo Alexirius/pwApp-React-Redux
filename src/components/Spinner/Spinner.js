@@ -1,3 +1,5 @@
+// simple svg-spinner
+
 import './Spinner.css';
 
 const Spinner = () => {

@@ -1,6 +1,6 @@
 // -- API requests constructors -- //
 
-export default class ApiService {
+export default class PwApiService {
 
     _baseUrl = 'http://193.124.114.46:3001/';
 

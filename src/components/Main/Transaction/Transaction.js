@@ -1,12 +1,11 @@
 import React from 'react';
-import ApiService from '../../../services/api-service';
 import Dialog from '../../Dialog/Dialog';
 import AutocompleteField from '../../AutocompleteField/AutocompleteField';
+import withPwApi from '../../hoc-helpers/withPwApi';
 import './Transaction.css';
 
-export default class Transaction extends React.Component {
+class Transaction extends React.Component {
 
-	api = new ApiService();
 
 	state = {
 		recipient: '',
@@ -33,7 +32,7 @@ export default class Transaction extends React.Component {
 		this.setState({message: ''});
 		clearErr();
 		
-		if (!amount || parseInt(amount) <= 0)  {		// Local validation
+		if (!amount || parseFloat(amount) <= 0)  {		// Local validation
 			throwLocalError("Invalid PW Amount");
 			return false;
 		}
@@ -46,8 +45,9 @@ export default class Transaction extends React.Component {
 
 		if (confirmed) {
 			const {recipient, amount} = this.state;
-			const {token, catchError, updateTransList, clearErr, updateBalance} = this.props;
-			this.api.createTransaction(token, recipient, amount)
+			const {token, catchError, updateTransList, clearErr,
+					updateBalance, pwApi} = this.props;
+			pwApi.createTransaction(token, recipient, amount)
 				.then((res) => {
 					const {amount, username, balance} = res;
 					clearErr();
@@ -62,8 +62,7 @@ export default class Transaction extends React.Component {
 	render() {
 
 		const {recipient, amount, isConfirmNeeded, message} = this.state;
-		const {token, error, catchError, clearErr} = this.props;
-		console.log(error);
+		const {token, error, catchError, clearErr, pwApi} = this.props;
         const warning = (error)? <div className="warning">
                 {error}
             </div> : null;
@@ -82,7 +81,7 @@ export default class Transaction extends React.Component {
 					<AutocompleteField name='recipient' value ={recipient} 
 							placeholder="Recipient's Name"
 							handleChange={this.handleChange} 
-							getData = {this.api.getUsersList} getDataArgs = {[token]}
+							getData = {pwApi.getUsersList} getDataArgs = {[token]}
 							onSelect={this.handleAutocompleteSelect}
 							catchError={catchError} clearErr={clearErr} />
 					<input type='number' id='amount' name='amount' placeholder="amount"
@@ -96,3 +95,4 @@ export default class Transaction extends React.Component {
 		)
 	}
 }
+export default withPwApi(Transaction);

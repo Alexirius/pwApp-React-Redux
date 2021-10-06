@@ -2,13 +2,12 @@ import React from "react";
 import Header from "./Header/Header";
 import History from "./History/History";
 import Transaction from "./Transaction/Transaction";
-import ApiService from "../../services/api-service";
-import './Main.css';
+import withPwApi from "../hoc-helpers/withPwApi";
 import Spinner from "../Spinner/Spinner";
+import './Main.css';
 
-export default class Main extends React.Component {
+class Main extends React.Component {
 
-	api = new ApiService();
     timeout = '';
 
     state = {
@@ -17,11 +16,11 @@ export default class Main extends React.Component {
     }
 
     updateTransList = () => {        // Sends request to server for Transactions History
-        const {token, catchError, clearErr} = this.props;
+        const {token, catchError, clearErr, pwApi} = this.props;
         this.timeout = setTimeout(()=>{
             this.setState({loading: true});  // state.loading is used for showing Spinner
         },1000);                             // if loading lasts longer than 1 sec
-		this.api.getTransList(token)
+		pwApi.getTransList(token)
 			.then((res) => {
                 clearTimeout(this.timeout);
                 clearErr();
@@ -52,3 +51,4 @@ export default class Main extends React.Component {
         )
     }
 }
+export default withPwApi(Main);
