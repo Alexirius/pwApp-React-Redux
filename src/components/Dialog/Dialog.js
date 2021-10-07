@@ -1,7 +1,7 @@
 /*	Reusable Yes/No Dialog with Keyboard support
 
-Supported keys: <Y>, <N>, <Esc>, <Enter>, <Left> && <Right> arrows.
-Also click out of Dialog area is used for closing Dialog with "No" answer.
+Supported keys: <Y>, <N>, <Esc>, <Enter>, <Tab>, <Left> && <Right> arrows.
+Also click out of Dialog area is used to close the Dialog with "No" answer.
 
 props:
     header: string,
@@ -41,7 +41,7 @@ export default class Dialog extends React.Component {
         ev.preventDefault();
         const {keyCode} = ev;
         const {handleYes, handleNo} = this.props;
-        if (keyCode===37 || keyCode===39) {                         // <Left> || <Right> arrows keys
+                    if (keyCode===37 || keyCode===39 || keyCode===9) {        // <Tab> || <Left> || <Right> keys
             this.setState((state)=>{
                 return {activeYes: !state.activeYes}
             })

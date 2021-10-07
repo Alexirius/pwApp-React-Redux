@@ -1,0 +1,11 @@
+.wings1 {fill:#9F4636}
+.wings2 {fill:wheat}
+.beak {fill:#bF6656}
+.body {fill:white}
+.foot {fill:wheat}
+.back {fill:#42313A}
+.white {fill:white}
+.black {fill:black}
+
+#Back_Wing, #Front_Wing {transform-origin: center 730px}
+#Eye {transform-origin: center 650px}

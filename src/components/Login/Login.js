@@ -48,17 +48,13 @@ export default class Login extends React.Component {
             <RegisteredUser email={email} password={password}
                 onChange={this.handleChange} onModeChange={()=>{this.registerMode(true)}} />;
 
-        const warning = (error) ? 
-                <div className="warning">
-                    {error}
-                </div>
-        : null;
-
         return (
             <div className="login-page">
                 <form className="login-form" onSubmit={this.onSubmit} >
                     {formContent}
-                    {warning}
+                    <div className="warning">
+                        {error}
+                    </div>
                 </form>
             </div>
         )

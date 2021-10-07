@@ -1,5 +1,6 @@
 // -- Login Form for Registered user -- //
 
+import React from 'react';
 const RegisteredUser = ({email, password, onChange, onModeChange}) => {
     return (
         <>

@@ -54,7 +54,7 @@ class App extends React.Component {
   )
 
   catchError = (err) => {
-    console.log(err);
+    console.log('!!!',err);
     this.setState({error: err.toString()});
   }
 
@@ -79,9 +79,12 @@ class App extends React.Component {
       <Login handleLogin={this.handleLogin}
             clearErr={this.clearErr} error={error} />;
     return (
-        <div className="App">
+      <>
+        <div className="app-back" />
+        <div className="app">
           {appContent}
         </div>
+      </>
     )
   }
 };

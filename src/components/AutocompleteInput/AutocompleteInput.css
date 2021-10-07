@@ -26,6 +26,7 @@
     background-color: #9F4636;
     color: #fff;
 }
-#autocomplete_field {
+#autocomplete-input {
     width: 200px;
+    margin-bottom: 10px;
 }

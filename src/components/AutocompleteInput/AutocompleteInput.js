@@ -1,10 +1,10 @@
-/* Reuseable Component for Autocomplete field
+/* Reuseable Component for Autocomplete input
 
 props:
     name: string;
     value: string;
     placeholder: string;
-    handleChange: function - field value change handler, arg: (event);
+    handleChange: function - input value change handler, arg: (event);
     getData: async function => promise - gets autocomlete list, args: (any);
     getDataArgs: array - args list for getData function;
     onSelect: function - autocomplete select handler, arg: (selected string);
@@ -14,15 +14,36 @@ props:
  
 import React from "react";
 import AutocompleteList from "./AutocompleteList";
-import './AutocompleteField.css'
+import PropTypes from 'prop-types';
 
-export default class AutocompleteField extends React.Component {
+import './AutocompleteInput.css'
+
+export default class AutocompleteInput extends React.Component {
+    static propTypes = {
+        name: PropTypes.string,
+        value: PropTypes.string,
+        placeholder: PropTypes.string,
+        handleChange: PropTypes.func,
+        getData: PropTypes.func.isRequired,   // async (...getDataArgs, search_string) => [{id, name}]
+        getDataArgs: PropTypes.array,         // args list for getData function
+        onSelect: PropTypes.func.isRequired,  // arg: (selected_string)
+        catchError: PropTypes.func,           // error handler, arg: (error)
+        clearErr: PropTypes.func              // arg: none
+    }
+    static defaultProps = {
+        name: 'autocomplete',
+        value: undefined,
+        placeholder: 'autocomplete',
+        handleChange: ()=>{},
+        getDataArgs: [],
+        catchError: ()=>{},
+        clearErr: ()=>{}
+    }
 
     state = {
 		itemsList: [],
 		focusedItem: 0,
 	}
-
     onChange = (ev) => {
         const {handleChange} = this.props;
         handleChange(ev);
@@ -100,7 +121,7 @@ export default class AutocompleteField extends React.Component {
         const {itemsList, focusedItem} = this.state;
         return (
             <span className='autocomplete-wrap'>
-                <input type="text" name={name} value={value} id="autocomplete_field"
+                <input type="text" name={name} value={value} id="autocomplete-input"
                     placeholder={placeholder} autoComplete='off' required
                     onChange = {this.onChange} onKeyDown = {this.onKeyPressed}/>
                 <AutocompleteList

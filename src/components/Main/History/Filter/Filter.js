@@ -31,7 +31,7 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
                 <button className="clear"
                         onClick={onFilterClear}>&times;</button>
             </span>
-            <span>
+            <span className='btn-group'>
                 {buttons}
             </span>
         </div>

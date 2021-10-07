@@ -23,6 +23,9 @@
     background-color: white;
     color: #42313A;
 }
+.filter .btn-group {
+    white-space: nowrap;
+}
 .filter button {
     background-color:#F1DCC9;
 }

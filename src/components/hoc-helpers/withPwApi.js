@@ -8,7 +8,7 @@
     PwApiService in <App> and then simply drill it as prop to <Main> and then
     to <Transactions>. Why not? IMHO, This is better then create an instance in 
     every component, at least.
-    But then I desided that probably this is an efficient way to demonstrate
+      But then I desided that probably this is an efficient way to demonstrate
     my acquaintance with React-HOC pattern concept. Where else in this app?
     Silly? Maybe... :) Yeh. let it be.
 */

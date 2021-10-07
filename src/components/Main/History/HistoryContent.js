@@ -1,3 +1,5 @@
+import React from 'react';
+
 const HistoryContent = ({historyArray, filterString, filterFlag}) => {
 
     const filterArray = (arr) => {
@@ -34,17 +36,15 @@ const HistoryContent = ({historyArray, filterString, filterFlag}) => {
     if (!historyArray.length) {
         return 'You have no Transactions History yet.';
     }
-
 	historyArray = filterArray(historyArray);
     if (!historyArray.length) {
         return 'No matches found.';
     }
-
     const tHead = (
         <thead>
             <tr key = '000'>
                 <th>Date</th>
-                <th>Recipient/Sender</th>
+                <th>Recipient/&shy;Sender</th>
                 <th>Amount</th>
                 <th>Balance</th>
             </tr>

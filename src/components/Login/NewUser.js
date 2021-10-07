@@ -1,5 +1,6 @@
 // Register New User form
 
+import React from 'react';
 const NewUser = ({email, username, password, passConfirm, onChange, onModeChange}) => {
     return (
         <>

@@ -1,10 +1,8 @@
 .login-page {
     text-align: center;
-    display: flex;
 }
 .login-form {
-    width: 400px;
-    max-width: 400px;
+    width: 300px;
     margin: auto;
 }
 .login-form input, .login-form button {

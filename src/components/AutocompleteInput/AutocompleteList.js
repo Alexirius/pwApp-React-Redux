@@ -1,3 +1,5 @@
+import React from 'react';
+
 const AutocompleteList = ({list, focusedItem, onItemClick}) => {
     if (!list.length) return null;
     return (

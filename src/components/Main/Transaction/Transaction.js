@@ -1,17 +1,16 @@
 import React from 'react';
 import Dialog from '../../Dialog/Dialog';
-import AutocompleteField from '../../AutocompleteField/AutocompleteField';
+import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
 import withPwApi from '../../hoc-helpers/withPwApi';
 import './Transaction.css';
 
 class Transaction extends React.Component {
 
-
 	state = {
 		recipient: '',
 		amount: '',
 		isConfirmNeeded: false,
-		message: ''
+		message: null
 	}
 
 	handleChange = (ev) => {	// on inputs change
@@ -29,9 +28,8 @@ class Transaction extends React.Component {
 		ev.preventDefault();
 		const {amount} = this.state;
 		const {throwLocalError, clearErr} = this.props;
-		this.setState({message: ''});
+		this.setState({message: null});
 		clearErr();
-		
 		if (!amount || parseFloat(amount) <= 0)  {		// Local validation
 			throwLocalError("Invalid PW Amount");
 			return false;
@@ -63,22 +61,17 @@ class Transaction extends React.Component {
 
 		const {recipient, amount, isConfirmNeeded, message} = this.state;
 		const {token, error, catchError, clearErr, pwApi} = this.props;
-        const warning = (error)? <div className="warning">
-                {error}
-            </div> : null;
-		const messageDiv = (message.length) ? <div className = 'message'>{message}</div> : ''
-		const dialog = (isConfirmNeeded) ? <Dialog header='Confirm Operation'
+		const dialog = isConfirmNeeded && <Dialog header='Confirm Operation'
 							message = {`Send ${amount} PW to ${recipient}?`}
 							handleYes = {() => this.handleConfirm(true)}
-							handleNo = {()=>this.handleConfirm(false)} />
-						: null;
+							handleNo = {()=>this.handleConfirm(false)} />;
 
 		return (
-			<div>
+			<>
 				<form className="transaction" onSubmit={this.onSubmit}>
 					<h2>Create Transaction</h2>
 
-					<AutocompleteField name='recipient' value ={recipient} 
+					<AutocompleteInput name='recipient' value ={recipient} 
 							placeholder="Recipient's Name"
 							handleChange={this.handleChange} 
 							getData = {pwApi.getUsersList} getDataArgs = {[token]}
@@ -87,11 +80,11 @@ class Transaction extends React.Component {
 					<input type='number' id='amount' name='amount' placeholder="amount"
 							value={amount} onChange = {this.handleChange} required />
 					<button className='send_btn' type='submit'>Send</button>
-					{warning}
-					{messageDiv}
+					<div className="warning">{error}</div>
+					<div className = 'message'>{message}</div>
 				</form>
 				{dialog}
-			</div>
+			</>
 		)
 	}
 }

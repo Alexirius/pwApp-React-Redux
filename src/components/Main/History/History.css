@@ -2,12 +2,14 @@
     text-align: center;
 }
 .history-table {
+    font-size: 0.9rem;
     margin: auto;
     background-color: white;
     text-align: left;
     border: 2px solid #42313A;
     border-radius: 6px;
     padding: 0px;
+    overflow: scroll;
 }
 .history-table td {
     padding: 5px 10px;
