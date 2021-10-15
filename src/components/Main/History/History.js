@@ -1,9 +1,19 @@
 import React from 'react';
 import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
+import PropTypes from 'prop-types';
 import './History.css';
 
 export default class History extends React.Component {
+    static propTypes = {
+		historyArray: PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			date: PropTypes.string.isRequired,
+			username: PropTypes.string.isRequired,
+			amount: PropTypes.number.isRequired,
+			balance: PropTypes.number.isRequired
+		}))
+	}
 
 	state={
 		filterString: '',

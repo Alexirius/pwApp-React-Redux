@@ -79,12 +79,10 @@ class App extends React.Component {
       <Login handleLogin={this.handleLogin}
             clearErr={this.clearErr} error={error} />;
     return (
-      <>
-        <div className="app-back" />
         <div className="app">
+          <div className="app-back" />
           {appContent}
         </div>
-      </>
     )
   }
 };

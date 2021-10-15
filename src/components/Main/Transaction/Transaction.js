@@ -2,9 +2,19 @@ import React from 'react';
 import Dialog from '../../Dialog/Dialog';
 import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
 import withPwApi from '../../hoc-helpers/withPwApi';
+import PropTypes from 'prop-types';
 import './Transaction.css';
 
 class Transaction extends React.Component {
+    static propTypes = {
+		token: PropTypes.string.isRequired,
+		clearErr: PropTypes.func.isRequired,
+		error: PropTypes.string,
+		throwLocalError: PropTypes.func.isRequired,
+		catchError: PropTypes.func.isRequired,
+		updateTransList: PropTypes.func.isRequired,
+		updateBalance: PropTypes.func.isRequired,
+	}
 
 	state = {
 		recipient: '',
@@ -70,13 +80,12 @@ class Transaction extends React.Component {
 			<>
 				<form className="transaction" onSubmit={this.onSubmit}>
 					<h2>Create Transaction</h2>
-
-					<AutocompleteInput name='recipient' value ={recipient} 
-							placeholder="Recipient's Name"
-							handleChange={this.handleChange} 
-							getData = {pwApi.getUsersList} getDataArgs = {[token]}
-							onSelect={this.handleAutocompleteSelect}
-							catchError={catchError} clearErr={clearErr} />
+					<AutocompleteInput name='recipient' value ={recipient}
+						placeholder="Recipient's Name"
+						handleChange={this.handleChange} 
+						getData = {pwApi.getUsersList} getDataArgs = {[token]}
+						onSelect={this.handleAutocompleteSelect}
+						catchError={catchError} clearErr={clearErr} />
 					<input type='number' id='amount' name='amount' placeholder="amount"
 							value={amount} onChange = {this.handleChange} required />
 					<button className='send_btn' type='submit'>Send</button>
