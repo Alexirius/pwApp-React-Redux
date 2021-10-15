@@ -1,134 +1,121 @@
-/* Reuseable Component for Autocomplete input
+/* Reuseable Component for Autocomplete input with keyboard support.
+    supported keys: <Up> & <Down> arrows, <Esc>, <Enter>
+    Can be used with both controlled & uncontrolled inputs
 
 props:
     name: string;
     value: string;
     placeholder: string;
     handleChange: function - input value change handler, arg: (event);
-    getData: async function => promise - gets autocomlete list, args: (any);
+    getData: -Required- async function (...getDataArgs, input_value) => promise => [{id, name}];
     getDataArgs: array - args list for getData function;
-    onSelect: function - autocomplete select handler, arg: (selected string);
+    handleSelect: -Required- function - autocomplete select handler, arg: (selected string) Required;
     catchError: function - error handler, arg: (error: error);
     clearErr: function - clears error, arg: none.
 */
  
-import React from "react";
+import React, {createRef, useState} from "react";
 import AutocompleteList from "./AutocompleteList";
-import PropTypes from 'prop-types';
-
 import './AutocompleteInput.css'
 
-export default class AutocompleteInput extends React.Component {
-    static propTypes = {
-        name: PropTypes.string,
-        value: PropTypes.string,
-        placeholder: PropTypes.string,
-        handleChange: PropTypes.func,
-        getData: PropTypes.func.isRequired,   // async (...getDataArgs, search_string) => [{id, name}]
-        getDataArgs: PropTypes.array,         // args list for getData function
-        onSelect: PropTypes.func.isRequired,  // arg: (selected_string)
-        catchError: PropTypes.func,           // error handler, arg: (error)
-        clearErr: PropTypes.func              // arg: none
-    }
-    static defaultProps = {
-        name: 'autocomplete',
-        value: undefined,
-        placeholder: 'autocomplete',
-        handleChange: ()=>{},
-        getDataArgs: [],
-        catchError: ()=>{},
-        clearErr: ()=>{}
-    }
+const listRef = createRef();
+let timeout;
 
-    state = {
-		itemsList: [],
-		focusedItem: 0,
-	}
-    onChange = (ev) => {
-        const {handleChange} = this.props;
+const AutocompleteInput = ({name = 'autocomplete',
+                        value=undefined,        // if is applied to uncontrolled input
+                        placeholder='autocomplete',
+                        handleChange=()=>{}, 
+                        getData,
+                        getDataArgs=[],
+                        handleSelect,
+                        catchError=()=>{},
+                        clearErr=()=>{} }) => {
+
+    const [itemsList, setItemsList] = useState([]);
+    const [focusedItem, setFocusedItem] = useState(0);
+
+    const onChange = (ev) => {
         handleChange(ev);
         const {value} = ev.target;
         if (value.length) {
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout( 
-                this.enableAutocomplete(value), 300)
+            clearTimeout(timeout);
+            timeout = setTimeout( 
+                enableAutocomplete(value),300);
         } else {
-            this.disableAutocomplete();
+            disableAutocomplete();
         }
     }
 
-    enableAutocomplete = (string) => {
-		const {catchError, clearErr, getData, getDataArgs} = this.props;
-
-		getData(...getDataArgs, string)	// Getting filtered Users List
+    const enableAutocomplete = (string) => {
+		getData(...getDataArgs, string)	        // Getting List from server
 			.then((res) => {
 				clearErr();
 				if (res.length) {
-					document.body.addEventListener('click', this.onBodyClick);
-					this.setState({itemsList: res});
+					document.body.addEventListener('click', onBodyClick);
+					setItemsList(res);
 				} else {
-					this.disableAutocomplete();
+					disableAutocomplete();
 				}
 			})
 			.catch((err) => {catchError(err)});
 	};
 
-    onBodyClick = (ev) => {		// Click out of Autocomplete List area
-		if (!document.getElementById('autocomplete-list').contains(ev.target)) {
-			this.disableAutocomplete();
+    const onBodyClick = (ev) => {		// Click out of Autocomplete List area
+        const listDiv=listRef.current;
+		if (listDiv && !listDiv.contains(ev.target)) {
+			disableAutocomplete();
 		}
 	}
 
-    disableAutocomplete = () => {
-		this.setState({itemsList: [], focusedItem: 0});
-		document.body.removeEventListener('click', this.onBodyClick);
+    const disableAutocomplete = () => {
+		setItemsList([]);
+        setFocusedItem(0);
+		document.body.removeEventListener('click', onBodyClick);
 	}
 
-    onItemClick = (ev) => {		// Click on Autocomplete List Item
-        const {onSelect} = this.props;
-        onSelect(ev.target.innerText);
-		this.disableAutocomplete();
+    const onItemClick = (ev) => {		// Click on Autocomplete List Item
+        handleSelect(ev.target.innerText);
+		disableAutocomplete();
 	}
 
-    onKeyPressed = (ev) => {		// keyboard handler for autocomplete
-		const {focusedItem, itemsList} = this.state;
+    const onKeyPressed = (ev) => {		// keyboard handler for autocomplete
 		const {keyCode} = ev;
-		if(keyCode === 40) { 					// arrow down
-			this.focusItem(focusedItem+1);
-		} else if(keyCode === 38) { 			//arrow up
-			this.focusItem(focusedItem-1);
-		} else if(keyCode === 27) { 			// escape
-			this.disableAutocomplete();
-		} else if(keyCode === 13) { 			// enter
-			ev.preventDefault();
-			if (itemsList.length) {
-                const {onSelect} = this.props;
-                onSelect(itemsList[focusedItem].name);
-				this.disableAutocomplete();
-			}
+        switch (keyCode) {
+		    case 40:  					    // arrow down
+                focusItem(focusedItem+1);
+                break;
+            case 38: 			            //arrow up
+                focusItem(focusedItem-1);
+                break;
+            case 27: 			            // escape
+                disableAutocomplete();
+                break;
+            case 13: 			            // enter
+                ev.preventDefault();
+                if (itemsList.length) {
+                    handleSelect(itemsList[focusedItem].name);
+                    disableAutocomplete();
+                }
+                break;
+            default:
 		}
 	}
 
-    focusItem = (index) => {	            // in autocomplete list
-		const {itemsList} = this.state;
-		if (index > itemsList.length - 1) return this.focusItem(0);
-		if (index < 0) return this.focusItem(itemsList.length - 1);
-		this.setState({focusedItem: index});
+    const focusItem = (index) => {	            // in autocomplete list
+		if (index > itemsList.length - 1) return focusItem(0);
+		if (index < 0) return focusItem(itemsList.length - 1);
+		setFocusedItem(index);
 	}
-
-    render () {
-        const {name,value,placeholder=''} = this.props;
-        const {itemsList, focusedItem} = this.state;
-        return (
-            <span className='autocomplete-wrap'>
-                <input type="text" name={name} value={value} id="autocomplete-input"
-                    placeholder={placeholder} autoComplete='off' required
-                    onChange = {this.onChange} onKeyDown = {this.onKeyPressed}/>
-                <AutocompleteList
-                    list={itemsList}
-                    focusedItem={focusedItem}
-                    onItemClick={this.onItemClick} />
-            </span>
-        )
-    }
+    return (
+        <span className='autocomplete-wrap'>
+            <input type="text" name={name} value={value} id="autocomplete-input"
+                placeholder={placeholder} autoComplete='off'
+                onChange = {onChange} onKeyDown = {onKeyPressed} />
+            <AutocompleteList itemsList = {itemsList}
+                            focusedItem = {focusedItem}
+                            onItemClick = {onItemClick}
+                            listRef = {listRef} />
+        </span>
+    )
 }
+export default AutocompleteInput;

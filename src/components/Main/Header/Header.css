@@ -1,6 +1,6 @@
 .header-wrap {
     background-color: #42313A;
-    width: 100%;
+    min-width: 100%;
     left: 0;
 }
 .app-header {

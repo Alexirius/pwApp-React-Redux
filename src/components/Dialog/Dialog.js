@@ -1,70 +1,56 @@
 /*	Reusable Yes/No Dialog with Keyboard support
 
 Supported keys: <Y>, <N>, <Esc>, <Enter>, <Tab>, <Left> && <Right> arrows.
-Also click out of Dialog area is used to close the Dialog with "No" answer.
+Also click out of Dialog area may be used to close the Dialog with "No" answer.
 
-props:
-    header: string,
-    message: string,
-    handleYes: function,
-    handleNo: function.
 */
 
-import React from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import './Dialog.css';
 
-export default class Dialog extends React.Component {
+const Dialog = ({header, message, handleYes, handleNo}) => {
 
-    state={activeYes: false};
+    const [activeYes, setActive] = useState(false)
+    const dialogContent = createRef();
 
-    componentDidMount() {
-        // Click out of Dialog area
-        document.getElementById('back-dialog').addEventListener('click',this.clickOnBack);
-        // Keyboard support
-        document.body.addEventListener('keydown',this.handleKeyboard);
-    }
-
-    componentWillUnmount() {
-        document.getElementById('back-dialog').removeEventListener('click',this.clickOnBack);
-        document.body.removeEventListener('keydown',this.handleKeyboard);
-    }
-
-    clickOnBack = (ev) =>{
-        const {handleNo} = this.props;
-		if (!document.getElementById('dialog-content').contains(ev.target)) {
+    const clickOnBack = (ev) =>{        // Click out of Dialog area
+		if (dialogContent.current && !dialogContent.current.contains(ev.target)) {
             handleNo();
         }
-
     }
 
-    handleKeyboard = (ev) => {
+    const handleKeyboard = (ev) => {
         ev.preventDefault();
         const {keyCode} = ev;
-        const {handleYes, handleNo} = this.props;
-                    if (keyCode===37 || keyCode===39 || keyCode===9) {        // <Tab> || <Left> || <Right> keys
-            this.setState((state)=>{
-                return {activeYes: !state.activeYes}
-            })
-        } else if (keyCode===13) {                                  // <Enter> key
-            return (this.state.activeYes) ? handleYes() : handleNo();
+        if (keyCode===37 || keyCode===39 || keyCode===9) {       // <Tab> || <Left> || <Right> keys
+            setActive((activeYes)=>{return !activeYes})
+        } else if (keyCode===13) {                               // <Enter> key
+            return (activeYes) ? handleYes() : handleNo();
         }
-        else if (keyCode===89) return handleYes()                   // <Y> key
-        else if (keyCode===27 || keyCode===78) return handleNo()    // <Esc> || <N> key
-
+        else if (keyCode===89) return handleYes()                 // <Y> key
+        else if (keyCode===27 || keyCode===78) return handleNo()  // <Esc> || <N> key
     }
 
-    render() {
-        const {header, message, handleYes, handleNo} = this.props;
-        const {activeYes} = this.state;
-        return (
-            <div id="back-dialog">
-                <div id="dialog-content">
-                    <div id="dialog-header">{header}</div>
-                    <div id="dialog-text">{message}</div>
-                    <button className={(activeYes)?'btn active':'btn'} onClick= {handleYes}>Yes</button>
-                    <button className={(activeYes)?'btn':'btn active'} onClick={handleNo}>No</button>
-                </div>
+    useEffect(() => {
+        document.body.addEventListener('click', clickOnBack);
+        document.body.addEventListener('keydown', handleKeyboard);
+        return () => {
+            document.body.removeEventListener('click', clickOnBack);
+            document.body.removeEventListener('keydown', handleKeyboard);
+        }
+    // eslint-disable-next-line
+    },[]);
+
+
+    return (
+        <div id="back-dialog">
+            <div id="dialog-content" ref={dialogContent}>
+                <div id="dialog-header">{header}</div>
+                <div id="dialog-text">{message}</div>
+                <button className={(activeYes)?'btn active':'btn'} onClick={handleYes}>Yes</button>
+                <button className={(activeYes)?'btn':'btn active'} onClick={handleNo}>No</button>
             </div>
-        )
-    }
+        </div>
+    )
 }
+export default Dialog;

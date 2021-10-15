@@ -1,47 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
 import './History.css';
 
-export default class History extends React.Component {
+const History = ({historyArray})=>{
 
-	state={
-		filterString: '',
-		filterFlag: 'all'	// possible values: 'all' || 'debit' || 'credit'
-	}
+	const [filterString, setfilterString] = useState('');
+	const [filterFlag, setfilterFlag] = useState('all');
+			// filterFlag: possible values: 'all' || 'debit' || 'credit'
 
-	handleFilterChange = (string) => {
-		this.setState({
-			filterString: string
-		})
-	}
+	const handleFilterChange = (string) => {setfilterString(string)};
 	
-	handleFilterClick = (flag) => {
-		this.setState({
-			filterFlag: flag
-		})
-	}
+	const handleFilterClick = (flag) => {setfilterFlag(flag)};
 
-	handleFilterClear = () => {
-		this.setState({
-			filterString: ''
-		})
-	}
+	const handleFilterClear = () => {setfilterString('')};
 
-	render() {
-		let {historyArray} = this.props;
-		const {filterString, filterFlag} = this.state;
-		return (
-			<div className="history">
-				<h2>Transactions History</h2>
-				<Filter filterString={filterString}
-						onFilterChange={this.handleFilterChange}
-						filterFlag={filterFlag}
-						onFilterClick={this.handleFilterClick}
-						onFilterClear={this.handleFilterClear} />
-				<HistoryContent historyArray={historyArray}
-						filterString={filterString} filterFlag={filterFlag} />
-			</div>
-		)
-	}
+	return (
+		<div className="history">
+			<h2>Transactions History</h2>
+			<Filter filterString={filterString}
+					onFilterChange={handleFilterChange}
+					filterFlag={filterFlag}
+					onFilterClick={handleFilterClick}
+					onFilterClear={handleFilterClear} />
+			<HistoryContent historyArray={historyArray}
+					filterString={filterString} filterFlag={filterFlag} />
+		</div>
+	)
 };
+export default History;

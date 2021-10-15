@@ -1,91 +1,89 @@
-import React from "react";
+import React, {useState} from "react";
 import Main from "./Main/Main";
 import Login from "./Login/Login";
 import withPwApi from "./hoc-helpers/withPwApi";
 import './App.css';
 
-class App extends React.Component {
+const App = ({pwApi}) => {
 
-  initialState ={
+  const initialState ={
     token: '',
     userId: '',
     userName: '',
     balance: '',
     error: null
   }
+  const [state, setstate] = useState(initialState)
+  const {getToken, getUserInfo} = pwApi;
 
-  state = this.initialState;
-
-  handleLogin = (passObj, newAccount) => {
-    if (newAccount) {
-      const { password, passConfirm } = passObj;
+  const handleLogin = (passObj, isNewAccount) => {
+    if (isNewAccount) {
+      const {password, passConfirm} = passObj;
       if (password !== passConfirm) {
-        this.throwLocalError('Password confirm mismatch!');
-        this.setState({ token: '' });
+        throwLocalError('Password confirm mismatch!');
+        setstate((state) => {return {...state, token: '' }});
         return;
       }
     }
-    this.props.pwApi.getToken(passObj, newAccount)
-      .then((token) => { this.loginOk(token) })
-      .catch((err) => { this.catchError(err) });
+    getToken(passObj, isNewAccount)
+      .then((token) => {loginOk(token)})
+      .catch((err) => {catchError(err)});
   }
 
-  loginOk = (token) => {this.props.pwApi.getUserInfo(token)   // Sends request to server 
+  const loginOk = (token) => {getUserInfo(token)   // Sends request to server 
                                                       // for logged user info
     .then((res) => {
       const {name, id, balance} = res;
-      this.setState({
+      setstate({
         token,
-        balance,
         userName: name,
         userId: id,
+        balance,
         error: null
       })
     })
-    .catch((err) => {this.catchError(err)});
+    .catch((err) => {catchError(err)});
   }
 
-  updateBalance = (balance) => {
-    this.setState({balance});
+  const updateBalance = (balance) => {
+    setstate((state) => {return {...state, balance}});
   }
 
-  throwLocalError = (text) => (
-    this.setState({error: `Еrror: ${text}`})
+  const throwLocalError = (text) => (
+    setstate((state) => {return {...state, error: `Error: ${text}`}})
   )
 
-  catchError = (err) => {
-    console.log('!!!',err);
-    this.setState({error: err.toString()});
+  const catchError = (err) => {
+    console.error(err);
+    setstate((state)=>{return {...state, error: err.toString()}});
   }
 
-  clearErr = () => {
-    this.setState({error: null});
+  const clearErr = () => {
+    setstate((state) => {return {...state, error: null}});
   }
 
-  handleLogout = () => {
-    this.setState(this.initialState);
+  const handleLogout = () => {
+    setstate(initialState);
   }
 
-  render() {
-    const {token, userName, balance, error} = this.state;
-    const appContent = (token) ?
+  const {token, userName, balance, error} = state;
+  const appContent = (token) ?
       <Main userName={userName} balance={balance} token={token} error={error} 
-            handleLogout={this.handleLogout}
-            updateBalance={this.updateBalance}
-            clearErr={this.clearErr}
-            throwLocalError={this.throwLocalError}
-            catchError={this.catchError} />
-    : 
-      <Login handleLogin={this.handleLogin}
-            clearErr={this.clearErr} error={error} />;
-    return (
-      <>
-        <div className="app-back" />
-        <div className="app">
-          {appContent}
-        </div>
-      </>
-    )
-  }
+            handleLogout={handleLogout}
+            updateBalance={updateBalance}
+            clearErr={clearErr}
+            throwLocalError={throwLocalError}
+            catchError={catchError} />
+  : 
+    <Login handleLogin={handleLogin}
+          clearErr={clearErr} error={error} />;
+  return (
+    <>
+      <div className="app-back" />
+      <div className="app">
+        {appContent}
+      </div>
+    </>
+  )
 };
 export default withPwApi(App);

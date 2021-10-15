@@ -1,30 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
 import './Login.css';
 
-export default class Login extends React.Component {
-
-    initialState = {
+const Login = ({handleLogin, clearErr, error}) => {
+    
+    const initialState = {
         email: '',
         password: '',
         username: '',
         passConfirm: '',
         isNewAccount: false
     }
-    state = this.initialState;
+    const [state, setstate] = useState(initialState);
 
-    handleChange = (ev) => {
+    const handleChange = (ev) => {
         const {name, value} = ev.target;
-        this.setState({
-            [name]: value
-        });
+        setstate((state) => {return {...state, [name]: value}});
     }
     
-    onSubmit = (ev) => {
+    const handleSubmit = (ev) => {
         ev.preventDefault();
-        const {username, email, password, passConfirm, isNewAccount} = this.state;
-        const {handleLogin} = this.props;
+        const {username, email, password, passConfirm, isNewAccount} = state;
         if (isNewAccount) {               // NEW user
             handleLogin({email, password, username, passConfirm}, true);
         } else {                        // REGISTERED user
@@ -32,31 +29,28 @@ export default class Login extends React.Component {
         }
     }
     
-    registerMode = (isNew) => {        // user is New (true) or Registered (false)
-        this.setState({isNewAccount: isNew});
-        this.props.clearErr();
+    const setRegisterMode = (isNew) => {        // user is New (true) or Registered (false)
+        setstate((state) => {return {...state, isNewAccount: isNew}});
+        clearErr();
     };
 
-    render() {
-        const {email, password, username, passConfirm, isNewAccount} = this.state;
-        const {error} = this.props;
+    const {email, password, username, passConfirm, isNewAccount} = state;
+    const formContent = (isNewAccount) ? 
+        <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
+            onChange= {handleChange} onModeChange= {()=>setRegisterMode(false)} />
+    :
+        <RegisteredUser email={email} password={password}
+            onChange={handleChange} onModeChange={()=>{setRegisterMode(true)}} />;
 
-        const formContent = (isNewAccount) ? 
-            <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
-                onChange= {this.handleChange} onModeChange= {()=>this.registerMode(false)} />
-        :
-            <RegisteredUser email={email} password={password}
-                onChange={this.handleChange} onModeChange={()=>{this.registerMode(true)}} />;
-
-        return (
-            <div className="login-page">
-                <form className="login-form" onSubmit={this.onSubmit} >
-                    {formContent}
-                    <div className="warning">
-                        {error}
-                    </div>
-                </form>
-            </div>
-        )
-    }
+    return (
+        <div className="login-page">
+            <form className="login-form" onSubmit={handleSubmit} >
+                {formContent}
+                <div className="warning">
+                    {error}
+                </div>
+            </form>
+        </div>
+    )
 };
+export default Login;

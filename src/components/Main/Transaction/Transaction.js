@@ -1,91 +1,89 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Dialog from '../../Dialog/Dialog';
 import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
 import withPwApi from '../../hoc-helpers/withPwApi';
 import './Transaction.css';
 
-class Transaction extends React.Component {
+const Transaction = (props) => {
 
-	state = {
+	const [state, setstate] = useState({
 		recipient: '',
 		amount: '',
 		isConfirmNeeded: false,
 		message: null
-	}
-
-	handleChange = (ev) => {	// on inputs change
+	})
+	const {createTransaction, getUsersList} = props.pwApi;
+	const handleChange = (ev) => {	// on inputs change
         const {name, value} = ev.target;
-        this.setState({
-            [name]: value
-        });
+        setstate((state) =>{return {...state, [name]: value}});
     }
 
-	handleAutocompleteSelect = (userName) => {
-		this.setState({recipient: userName});
+	const handleAutocompleteSelect = (userName) => {
+		setstate((state)=>{return {...state, recipient: userName}});
 	}
 
-	onSubmit = (ev) => {
+	const handleSubmit = (ev) => {
 		ev.preventDefault();
-		const {amount} = this.state;
-		const {throwLocalError, clearErr} = this.props;
-		this.setState({message: null});
+		const {amount} = state;
+		const {throwLocalError, clearErr} = props;
+		setstate((state)=>{return {...state, message: null}});
 		clearErr();
 		if (!amount || parseFloat(amount) <= 0)  {		// Local validation
 			throwLocalError("Invalid PW Amount");
 			return false;
 		}
-		this.setState({isConfirmNeeded: true});
+		setstate((state)=>{return {...state, isConfirmNeeded: true}});
 	}
 
-	handleConfirm = (confirmed) => {				// Send request to register new
+	const handleConfirm = (confirmed) => {			// Send request to register new
 													// transaction if user confirmed
-		this.setState({isConfirmNeeded: false});
+		setstate((state)=>{return {...state, isConfirmNeeded: false}});
 
 		if (confirmed) {
-			const {recipient, amount} = this.state;
+			const {recipient, amount} = state;
 			const {token, catchError, updateTransList, clearErr,
-					updateBalance, pwApi} = this.props;
-			pwApi.createTransaction(token, recipient, amount)
+					updateBalance} = props;
+			createTransaction(token, recipient, amount)
 				.then((res) => {
 					const {amount, username, balance} = res;
 					clearErr();
 					updateTransList();
 					updateBalance(balance);
-					this.setState({message: `Success. You sent ${-amount} PW to ${username}.`})
+					setstate((state)=>{return {...state,
+						message: `Success. You sent ${-amount} PW to ${username}.`}})
 				})
 				.catch((err) => {catchError(err)});
 		}
 	}
 
-	render() {
-
-		const {recipient, amount, isConfirmNeeded, message} = this.state;
-		const {token, error, catchError, clearErr, pwApi} = this.props;
-		const dialog = isConfirmNeeded && <Dialog header='Confirm Operation'
-							message = {`Send ${amount} PW to ${recipient}?`}
-							handleYes = {() => this.handleConfirm(true)}
-							handleNo = {()=>this.handleConfirm(false)} />;
-
-		return (
-			<>
-				<form className="transaction" onSubmit={this.onSubmit}>
-					<h2>Create Transaction</h2>
-
-					<AutocompleteInput name='recipient' value ={recipient} 
-							placeholder="Recipient's Name"
-							handleChange={this.handleChange} 
-							getData = {pwApi.getUsersList} getDataArgs = {[token]}
-							onSelect={this.handleAutocompleteSelect}
-							catchError={catchError} clearErr={clearErr} />
-					<input type='number' id='amount' name='amount' placeholder="amount"
-							value={amount} onChange = {this.handleChange} required />
-					<button className='send_btn' type='submit'>Send</button>
-					<div className="warning">{error}</div>
-					<div className = 'message'>{message}</div>
-				</form>
-				{dialog}
-			</>
+	const {recipient, amount, isConfirmNeeded, message} = state;
+	const {token, error, catchError, clearErr} = props;
+	const dialog = isConfirmNeeded &&
+			<Dialog header='Confirm Operation'
+					message = {`Send ${amount} PW to ${recipient}?`}
+					handleYes = {() => handleConfirm(true)}
+					handleNo = {()=>handleConfirm(false)} />;
+	return (
+		<>
+			<form className="transaction" onSubmit={handleSubmit}>
+				<h2>Create Transaction</h2>
+				<AutocompleteInput name='recipient'
+						value ={recipient}
+						placeholder="Recipient's Name"
+						handleChange={handleChange}
+						getData = {getUsersList}
+						getDataArgs = {[token]}
+						handleSelect={handleAutocompleteSelect}
+						catchError={catchError}
+						clearErr={clearErr} />
+				<input type='number' id='amount' name='amount' placeholder="amount"
+						value={amount} onChange = {handleChange} required />
+				<button className='send_btn' type='submit'>Send</button>
+				<div className="warning">{error}</div>
+				<div className = 'message'>{message}</div>
+			</form>
+			{dialog}
+		</>
 		)
-	}
 }
 export default withPwApi(Transaction);
