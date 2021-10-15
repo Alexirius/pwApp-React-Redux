@@ -1,9 +1,19 @@
 import React from 'react';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
+import PropTypes from 'prop-types';
 import './Login.css';
 
 export default class Login extends React.Component {
+    static propTypes = {
+        handleLogin: PropTypes.func.isRequired,
+        clearErr: PropTypes.func,
+        error: PropTypes.string
+    }
+    static defaultProps = {
+        clearErr: ()=>{},
+        error: null
+    }
 
     initialState = {
         email: '',

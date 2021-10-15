@@ -44,6 +44,9 @@ export default class AutocompleteInput extends React.Component {
 		itemsList: [],
 		focusedItem: 0,
 	}
+
+    listRef = React.createRef();
+
     onChange = (ev) => {
         const {handleChange} = this.props;
         handleChange(ev);
@@ -74,7 +77,8 @@ export default class AutocompleteInput extends React.Component {
 	};
 
     onBodyClick = (ev) => {		// Click out of Autocomplete List area
-		if (!document.getElementById('autocomplete-list').contains(ev.target)) {
+        const listDiv=this.listRef.current;
+		if (listDiv && !listDiv.contains(ev.target)) {
 			this.disableAutocomplete();
 		}
 	}
@@ -127,7 +131,8 @@ export default class AutocompleteInput extends React.Component {
                 <AutocompleteList
                     list={itemsList}
                     focusedItem={focusedItem}
-                    onItemClick={this.onItemClick} />
+                    onItemClick={this.onItemClick}
+                    listRef = {this.listRef} />
             </span>
         )
     }

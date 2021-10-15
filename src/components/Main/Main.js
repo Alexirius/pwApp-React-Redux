@@ -4,16 +4,28 @@ import History from "./History/History";
 import Transaction from "./Transaction/Transaction";
 import withPwApi from "../hoc-helpers/withPwApi";
 import Spinner from "../Spinner/Spinner";
+import PropTypes from 'prop-types';
 import './Main.css';
 
 class Main extends React.Component {
-
-    timeout = '';
+    static propTypes = {
+        userName: PropTypes.string.isRequired,
+        balance: PropTypes.number.isRequired,
+        token: PropTypes.string.isRequired,
+        error: PropTypes.string,
+        handleLogout: PropTypes.func.isRequired,
+        updateBalance: PropTypes.func.isRequired,
+        clearErr: PropTypes.func.isRequired,
+        throwLocalError: PropTypes.func.isRequired,
+        catchError: PropTypes.func.isRequired
+    }
 
     state = {
-		historyArray: [],
+        historyArray: [],
         loading: false
     }
+
+    timeout = '';
 
     updateTransList = () => {        // Sends request to server for Transactions History
         const {token, catchError, clearErr, pwApi} = this.props;

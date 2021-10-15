@@ -1,37 +1,45 @@
 /*	Reusable Yes/No Dialog with Keyboard support
 
 Supported keys: <Y>, <N>, <Esc>, <Enter>, <Tab>, <Left> && <Right> arrows.
-Also click out of Dialog area is used to close the Dialog with "No" answer.
+Also click out of Dialog area may be used to close the Dialog with "No" answer.
 
-props:
-    header: string,
-    message: string,
-    handleYes: function,
-    handleNo: function.
 */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Dialog.css';
 
 export default class Dialog extends React.Component {
+    static propTypes = {
+        header: PropTypes.string,
+        message: PropTypes.string,
+        handleYes: PropTypes.func.isRequired,
+        handleNo: PropTypes.func.isRequired
+    }
+    static defaultProps = {
+        header: '',
+        message: 'Really?',
+    }
 
     state={activeYes: false};
 
+    dialogContent = React.createRef();
+
     componentDidMount() {
         // Click out of Dialog area
-        document.getElementById('back-dialog').addEventListener('click',this.clickOnBack);
+        document.body.addEventListener('click',this.clickOnBack);
         // Keyboard support
         document.body.addEventListener('keydown',this.handleKeyboard);
     }
 
     componentWillUnmount() {
-        document.getElementById('back-dialog').removeEventListener('click',this.clickOnBack);
+        document.body.removeEventListener('click',this.clickOnBack);
         document.body.removeEventListener('keydown',this.handleKeyboard);
     }
 
     clickOnBack = (ev) =>{
         const {handleNo} = this.props;
-		if (!document.getElementById('dialog-content').contains(ev.target)) {
+		if (!this.dialogContent.current.contains(ev.target)) {
             handleNo();
         }
 
@@ -58,7 +66,7 @@ export default class Dialog extends React.Component {
         const {activeYes} = this.state;
         return (
             <div id="back-dialog">
-                <div id="dialog-content">
+                <div id="dialog-content" ref={this.dialogContent}>
                     <div id="dialog-header">{header}</div>
                     <div id="dialog-text">{message}</div>
                     <button className={(activeYes)?'btn active':'btn'} onClick= {handleYes}>Yes</button>
