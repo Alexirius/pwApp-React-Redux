@@ -1,9 +1,9 @@
 import React from 'react';
 
-const AutocompleteList = ({list, focusedItem, onItemClick}) => {
+const AutocompleteList = ({list, focusedItem, onItemClick, listRef}) => {
     if (!list.length) return null;
     return (
-        <div id='autocomplete-list'>
+        <div id='autocomplete-list' ref={listRef}>
             {list.map((item,ind) => {
                 const {id, name} = item;
                 return (

@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { handleLogout } from '../../../actions/actions';
 import Logo from './Logo/Logo';
 import './Header.css';
 
-const Header = ({ userName, balance, handleLogout }) => {
+const Header = ({ username, balance, handleLogout }) => {
     return (
         <header>
             <div className="header-wrap">
@@ -10,23 +12,28 @@ const Header = ({ userName, balance, handleLogout }) => {
                     <div className="logo" id="logo">
                             <Logo />
                     </div>
-                    <div className="header-center">
-                        <div className="logo-text">
-                            <h1>Your Parrot Wings Office</h1>
-                        </div>
-                        <div className='greetings'>
-                            Welcome, <span className="output"> {userName}</span>!
-                            Your balance is <span className="output"> {balance} </span> PW.
-                        </div>
+                    <div className="title">
+                        <h1>Your Parrot Wings Office</h1>
+                    </div>
+                    <div className='greetings'>
+                        Welcome, <span className="output"> {username}</span>!
+                        Your balance is <span className="output"> {balance} </span> PW.
                     </div>
                     <div className="btn-container">
                         <button className='logout_btn' type='button' onClick={handleLogout} >Logout</button>
                     </div>
                 </div>
             </div>
-
         </header>
     )
 }
-
-export default Header;
+const mapStateToProps = ({username, balance}) => {
+    return {
+        username,
+        balance,
+    }
+}
+const mapDispatchToProps = {
+    handleLogout
+}
+export default connect(mapStateToProps, mapDispatchToProps) (Header);

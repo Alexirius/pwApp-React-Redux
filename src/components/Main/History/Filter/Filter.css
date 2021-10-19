@@ -9,7 +9,10 @@
     margin-right: 0px;
     width: 200px;
 }
-.filter .clear {
+.filter .input-wrap {
+    white-space: nowrap;
+}
+    .filter .clear {
     margin-left: -15px;
     border: 2px solid #42313A;
     border-left: none;

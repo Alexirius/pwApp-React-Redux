@@ -1,15 +1,6 @@
-/* Reuseable Component for Autocomplete input
-
-props:
-    name: string;
-    value: string;
-    placeholder: string;
-    handleChange: function - input value change handler, arg: (event);
-    getData: async function => promise - gets autocomlete list, args: (any);
-    getDataArgs: array - args list for getData function;
-    onSelect: function - autocomplete select handler, arg: (selected string);
-    catchError: function - error handler, arg: (error: error);
-    clearErr: function - clears error, arg: none.
+/* Reuseable Component for Autocomplete input with keyboard support.
+    supported keys: <Up> & <Down> arrows, <Esc>, <Enter>
+    Can be used with both controlled & uncontrolled inputs
 */
  
 import React from "react";
@@ -23,7 +14,7 @@ export default class AutocompleteInput extends React.Component {
         name: PropTypes.string,
         value: PropTypes.string,
         placeholder: PropTypes.string,
-        handleChange: PropTypes.func,
+        handleChange: PropTypes.func,         // input value change handler, arg: (event)
         getData: PropTypes.func.isRequired,   // async (...getDataArgs, search_string) => [{id, name}]
         getDataArgs: PropTypes.array,         // args list for getData function
         onSelect: PropTypes.func.isRequired,  // arg: (selected_string)
@@ -32,7 +23,7 @@ export default class AutocompleteInput extends React.Component {
     }
     static defaultProps = {
         name: 'autocomplete',
-        value: undefined,
+        value: undefined,                   // for uncontrolled input
         placeholder: 'autocomplete',
         handleChange: ()=>{},
         getDataArgs: [],
@@ -44,6 +35,9 @@ export default class AutocompleteInput extends React.Component {
 		itemsList: [],
 		focusedItem: 0,
 	}
+
+    listRef = React.createRef();
+
     onChange = (ev) => {
         const {handleChange} = this.props;
         handleChange(ev);
@@ -74,7 +68,8 @@ export default class AutocompleteInput extends React.Component {
 	};
 
     onBodyClick = (ev) => {		// Click out of Autocomplete List area
-		if (!document.getElementById('autocomplete-list').contains(ev.target)) {
+        const listDiv=this.listRef.current;
+		if (listDiv && !listDiv.contains(ev.target)) {
 			this.disableAutocomplete();
 		}
 	}
@@ -127,7 +122,8 @@ export default class AutocompleteInput extends React.Component {
                 <AutocompleteList
                     list={itemsList}
                     focusedItem={focusedItem}
-                    onItemClick={this.onItemClick} />
+                    onItemClick={this.onItemClick} 
+                    listRef = {this.listRef} />
             </span>
         )
     }

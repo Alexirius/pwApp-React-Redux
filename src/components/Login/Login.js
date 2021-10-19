@@ -1,72 +1,64 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
-import PropTypes from 'prop-types';
+import withPwApi from '../hoc-helpers/withPwApi';
+import {newAccount, notNewAccount, inputChanged, catchErr,
+        authorizationSuccess} from '../../actions/actions';
 import './Login.css';
 
-export default class Login extends React.Component {
-    static propTypes = {
-        handleLogin: PropTypes.func.isRequired,
-        clearErr: PropTypes.func,
-        error: PropTypes.string
-    }
-    static defaultProps = {
-        clearErr: ()=>{},
-        error: null
-    }
+const Login =({isNewAccount, email, username, password, passConfirm, error,
+            newAccount, notNewAccount, inputChanged, catchErr,
+            authorizationSuccess, pwApi}) => {
 
-    initialState = {
-        email: '',
-        password: '',
-        username: '',
-        passConfirm: '',
-        isNewAccount: false
-    }
-    state = this.initialState;
+    const {getToken} = pwApi;
 
-    handleChange = (ev) => {
-        const {name, value} = ev.target;
-        this.setState({
-            [name]: value
-        });
-    }
-    
-    onSubmit = (ev) => {
+    const handleLogin = (ev) => {
         ev.preventDefault();
-        const {username, email, password, passConfirm, isNewAccount} = this.state;
-        const {handleLogin} = this.props;
-        if (isNewAccount) {               // NEW user
-            handleLogin({email, password, username, passConfirm}, true);
-        } else {                        // REGISTERED user
-            handleLogin({email, password}, false);
+        if (isNewAccount && password !== passConfirm) {
+            return catchErr('Error: Password confirm mismatch!')
         }
+        const passObj = (isNewAccount) ? {username, email, password, passConfirm}
+            : {email, password};
+        getToken (passObj, isNewAccount)
+            .then((token) => {authorizationSuccess(token)})
+            .catch((err) => {catchErr(err)})
     }
-    
-    registerMode = (isNew) => {        // user is New (true) or Registered (false)
-        this.setState({isNewAccount: isNew});
-        this.props.clearErr();
-    };
 
-    render() {
-        const {email, password, username, passConfirm, isNewAccount} = this.state;
-        const {error} = this.props;
-
-        const formContent = (isNewAccount) ? 
-            <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
-                onChange= {this.handleChange} onModeChange= {()=>this.registerMode(false)} />
-        :
-            <RegisteredUser email={email} password={password}
-                onChange={this.handleChange} onModeChange={()=>{this.registerMode(true)}} />;
-
-        return (
-            <div className="login-page">
-                <form className="login-form" onSubmit={this.onSubmit} >
-                    {formContent}
-                    <div className="warning">
-                        {error}
-                    </div>
-                </form>
-            </div>
-        )
-    }
+    const formContent = (isNewAccount) ? 
+        <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
+            onChange= {inputChanged} onModeChange= {notNewAccount} />
+    :
+        <RegisteredUser email={email} password={password}
+            onChange={inputChanged} onModeChange={newAccount} />;
+    return (
+        <div className="login-page">
+            <form className="login-form" onSubmit={handleLogin} >
+                {formContent}
+                <div className="warning">
+                    {error}
+                </div>
+            </form>
+        </div>
+    )
 };
+
+const mapStateToProps = ({email, password, username, passConfirm, 
+                        isNewAccount, error}) => {
+    return {
+        email,
+        password,
+        username,
+        passConfirm,
+        isNewAccount,
+        error
+    }
+}
+const mapDispatchToProps = {
+    newAccount,
+    notNewAccount,
+    inputChanged,
+    catchErr,
+    authorizationSuccess
+}
+export default withPwApi( connect(mapStateToProps, mapDispatchToProps) (Login));

@@ -18,7 +18,7 @@ export default class Dialog extends React.Component {
     }
     static defaultProps = {
         header: '',
-        message: 'Really?',
+        message: 'Really?'
     }
 
     state={activeYes: false};
@@ -42,14 +42,13 @@ export default class Dialog extends React.Component {
 		if (!this.dialogContent.current.contains(ev.target)) {
             handleNo();
         }
-
     }
 
     handleKeyboard = (ev) => {
         ev.preventDefault();
         const {keyCode} = ev;
         const {handleYes, handleNo} = this.props;
-                    if (keyCode===37 || keyCode===39 || keyCode===9) {        // <Tab> || <Left> || <Right> keys
+        if (keyCode===37 || keyCode===39 || keyCode===9) {        // <Tab> || <Left> || <Right> keys
             this.setState((state)=>{
                 return {activeYes: !state.activeYes}
             })

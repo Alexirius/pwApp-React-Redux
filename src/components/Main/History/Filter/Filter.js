@@ -1,7 +1,10 @@
 import React from "react";
+import { connect } from 'react-redux';
+import { inputChanged, handleFilterClear,
+        handleFilterClick} from "../../../../actions/actions";
 import './Filter.css';
 
-const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilterClear})  => {
+const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, handleFilterClear})  => {
 
     const filterButtons = [
         { name: 'all', label: 'All' },
@@ -16,7 +19,7 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
             <button key={name}
                 name={name}
                 type="button"
-                onClick={(ev) => onFilterClick(ev.target.name)}
+                onClick={(ev) => handleFilterClick(ev.target.name)}
                 className={classNames}> {label}
             </button>
         );
@@ -25,11 +28,11 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
     return (
         <div className='filter'>
             <span className="input-wrap">
-                <input type='text' name="filter_string" value={filterString}
-                    placeholder='filter' onChange = {(ev) => onFilterChange(ev.target.value)} 
-                    title='Type smth to filter by any field, e.g. "9/11/2001" (by Date) or "G.Bush Jr." (by Name)' />
+                <input type='text' name="filterString" value={filterString}
+                    placeholder='filter' onChange = {(ev) => inputChanged(ev)}
+                    title='Type smth to filter by any field, e.g. "11.09.2001" (by Date) or "G.Bush Jr." (by Name)' />
                 <button className="clear"
-                        onClick={onFilterClear}>&times;</button>
+                        onClick={handleFilterClear}>&times;</button>
             </span>
             <span className='btn-group'>
                 {buttons}
@@ -37,5 +40,13 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
         </div>
     )
 }
-
-export default Filter;
+const mapStateToProps = ({filterString, filterFlag}) => { return {
+    filterString,
+    filterFlag
+}};
+const mapDispatchToProps = {
+    inputChanged,
+    handleFilterClear,
+    handleFilterClick
+}
+export default  connect(mapStateToProps, mapDispatchToProps) (Filter);

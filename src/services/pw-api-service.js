@@ -34,7 +34,9 @@ export default class PwApiService {
             headers: {'Authorization': `Bearer ${token}`},
         });
         const json = await res.json();
-        return json.user_info_token;
+        const userInfo = json.user_info_token;
+        const username = userInfo.name;
+        return {...userInfo, username};
     }
 
     getTransList = async (token) => {

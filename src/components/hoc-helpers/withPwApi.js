@@ -1,15 +1,20 @@
-/*  HOC for components that use  PwApiService (<App>, <Main>, <Transaction>)
+/*  HOC for components that use PwApiService
     Just extends these components to include an instanсe of PwApiService.
 */
 
 import React from 'react';
-import PwApiService from '../../services/pw-api-service';
+import { PwApiConsumer } from '../contexts/pwApiContext';
 
 const withPwApi = (Wrapped) => {
-  const pwApi = new PwApiService();
   return (props) => {
-    return(
-      <Wrapped {...props} pwApi={pwApi} />
+    return (
+      <PwApiConsumer>
+        {(pwApi) => {
+            return(
+              <Wrapped {...props} pwApi={pwApi} />
+            )
+        }}
+      </PwApiConsumer>
     )
   }
 };
