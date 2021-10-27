@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from 'react-redux';
-import {inputChanged, handleFilterClear, handleFilterClick} from "../../../../actions/filterActions";
+import PropTypes from 'prop-types';
+import {filterStringChanged, handleFilterClear, handleFilterClick} from "../../../../actions/filterActions";
 import './Filter.css';
 
-const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, handleFilterClear})  => {
+const Filter = ({filterString, filterStringChanged, filterFlag, handleFilterClick, handleFilterClear})  => {
 
     const filterButtons = [
         { name: 'all', label: 'All' },
@@ -28,7 +29,7 @@ const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, hand
         <div className='filter'>
             <span className="input-wrap">
                 <input type='text' name="filterString" value={filterString}
-                    placeholder='filter' onChange = {(ev) => inputChanged(ev)}
+                    placeholder='filter' onChange = {(ev) => filterStringChanged(ev.target)}
                     title='Type smth to filter by any field, e.g. "11.09.2001" (by Date) or "G.Bush Jr." (by Name)' />
                 <button className="clear"
                         onClick={handleFilterClear}>&times;</button>
@@ -39,6 +40,15 @@ const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, hand
         </div>
     )
 }
+
+Filter.propTypes = {
+    filterString: PropTypes.string.isRequired,
+    filterStringChanged: PropTypes.func.isRequired,
+    filterFlag: PropTypes.oneOf(['all', 'debit', 'credit']).isRequired,
+    handleFilterClick: PropTypes.func.isRequired,
+    handleFilterClear: PropTypes.func.isRequired
+}
+
 const mapStateToProps = ({filterState}) => { 
     const {filterString, filterFlag} = filterState;
     return {
@@ -46,7 +56,7 @@ const mapStateToProps = ({filterState}) => {
         filterFlag
 }};
 const mapDispatchToProps = {
-    inputChanged,
+    filterStringChanged,
     handleFilterClear,
     handleFilterClick
 }

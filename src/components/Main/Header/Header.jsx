@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { handleLogout } from '../../../actions/headerActions';
+import PropTypes from 'prop-types';
+import { handleLogout } from '../../../actions/loginActions';
 import Logo from './Logo/Logo';
 import './Header.css';
 
@@ -27,6 +28,13 @@ const Header = ({ username, balance, handleLogout }) => {
         </header>
     )
 }
+
+Header.propTypes = {
+    username: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
+    handleLogout: PropTypes.func.isRequired
+}
+
 const mapStateToProps = ({mainState}) => {
     const {username, balance} = mainState;
     return {

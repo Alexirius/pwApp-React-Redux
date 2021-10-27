@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const HistoryContent = ({historyArray, filterString, filterFlag}) => {
+const HistoryContent = ({historyArray}) => {
 
     const renderTable = (arr) => {
 		return arr.map( (item) => {
@@ -35,6 +36,15 @@ const HistoryContent = ({historyArray, filterString, filterFlag}) => {
             </tbody>
         </table>
     );
-}
+};
+
+HistoryContent.propTypes = {
+    historyArray: PropTypes.arrayOf(PropTypes.shape({
+		amount: PropTypes.number.isRequired,
+		balance: PropTypes.number.isRequired,
+		date: PropTypes.string.isRequired,
+		id: PropTypes.number.isRequired,
+		username: PropTypes.string.isRequired
+	})).isRequired}
 
 export default HistoryContent;

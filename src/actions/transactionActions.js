@@ -1,27 +1,15 @@
+import { createAction } from "@reduxjs/toolkit";
+
 let timeout;
 
-export const inputChanged = (ev) => ({
-    type: 'TRANSACTION_INPUT_CHANGED', payload: ev.target
-});
-
-export const catchErr = (err) => ({
-    type: 'TRANSACTION_CATCH_ERROR',
-    payload: err.toString()
-});
-
-export const clearErr = () => ({
-    type: 'TRANSACTION_CATCH_ERROR',
-    payload: ''
-});
-
-export const handleAutocompleteSelect = (userName) => ({
-    type: 'AUTOCOMPLETE_ITEM_SELECTED',
-    payload: userName
-});
-
-const clearMessage = () => ({
-    type: 'CLEAR_MESSAGE'
-});
+export const inputChanged = createAction("TRANSACTION_INPUT_CHANGED");
+export const catchErr = createAction("TRANSACTION_CATCH_ERROR");
+export const clearErr = createAction("TRANSACTION_CLEAR_ERROR");
+export const handleAutocompleteSelect = createAction("AUTOCOMPLETE_ITEM_SELECTED");
+export const clearMessage = createAction("CLEAR_MESSAGE");
+export const createTransactionSuccess = createAction("CREATE_TRANSACTION_SUCCESS");
+export const showDialog = createAction("SHOW_DIALOG");
+export const removeDialog = createAction("REMOVE_DIALOG");
 
 export const createTransactionRequest = (token, recipient, amount, updateTransList) => {
     timeout = setTimeout(()=>{
@@ -42,21 +30,7 @@ export const createTransactionRequest = (token, recipient, amount, updateTransLi
             dispatch(catchErr(err))});
     }
 }
-
-const createTransactionSuccess = (data) => ({
-    type: 'CREATE_TRANSACTION_SUCCESS',
-    payload: data
-});
-
-export const showDialog = () => ({
-    type: 'SHOW_DIALOG'
-});
-
-export const removeDialog = () => ({
-    type: 'REMOVE_DIALOG'
-});
-
 const updateBalance = (balance) => ({
     type: 'UPDATE_BALANCE',
     payload: balance
-})
+});

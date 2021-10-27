@@ -1,13 +1,5 @@
-export const handleFilterClear = () => ({
-    type: 'FILTER_STRING_CLEARED'
-});
+import { createAction } from "@reduxjs/toolkit";
 
-export const handleFilterClick = (flag) => ({
-    type: 'FILTER_FLAG_CHANGED',
-    payload: flag
-});
-
-export const inputChanged = (ev) => ({
-    type: 'FILTER_STRING_CHANGED',
-    payload: ev.target
-});
+export const handleFilterClear = createAction("FILTER_STRING_CLEARED");
+export const handleFilterClick = createAction("FILTER_FLAG_CHANGED");
+export const filterStringChanged = createAction("FILTER_STRING_CHANGED");

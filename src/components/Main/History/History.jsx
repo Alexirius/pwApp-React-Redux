@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
 import './History.css';
@@ -21,8 +22,8 @@ const History =({historyArray, filterString, filterFlag}) => {
 		}
 		return arr;
 	}
-
-	const filteredArray = filterArray(historyArray)
+	const filteredArray = filterArray(historyArray);
+	console.log(filteredArray);
 	let historyContent;
 	if (!historyArray.length) {
 		historyContent = 'You have no Transactions History yet.';
@@ -40,4 +41,17 @@ const History =({historyArray, filterString, filterFlag}) => {
 		</div>
 	)
 };
+
+History.propTypes = {
+	historyArray: PropTypes.arrayOf(PropTypes.shape({
+		amount: PropTypes.number.isRequired,
+		balance: PropTypes.number.isRequired,
+		date: PropTypes.string.isRequired,
+		id: PropTypes.number.isRequired,
+		username: PropTypes.string.isRequired
+	})).isRequired,
+	filterString: PropTypes.string.isRequired,
+	filterFlag: PropTypes.oneOf(['all', 'debit', 'credit']).isRequired
+}
+
 export default History;
