@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { handleLogout } from '../../../actions/actions';
+import { handleLogout } from '../../../actions/headerActions';
 import Logo from './Logo/Logo';
 import './Header.css';
 
@@ -27,7 +27,8 @@ const Header = ({ username, balance, handleLogout }) => {
         </header>
     )
 }
-const mapStateToProps = ({username, balance}) => {
+const mapStateToProps = ({mainState}) => {
+    const {username, balance} = mainState;
     return {
         username,
         balance,

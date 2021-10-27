@@ -2,16 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
-import withPwApi from '../hoc-helpers/withPwApi';
-import {newAccount, notNewAccount, inputChanged, catchErr,
-        authorizationSuccess} from '../../actions/actions';
+import {newAccount, notNewAccount, authorizationRequest, inputChanged, catchErr} from '../../actions/loginActions';
 import './Login.css';
 
 const Login =({isNewAccount, email, username, password, passConfirm, error,
-            newAccount, notNewAccount, inputChanged, catchErr,
-            authorizationSuccess, pwApi}) => {
-
-    const {getToken} = pwApi;
+    newAccount, notNewAccount, inputChanged, catchErr, authorizationRequest}) => {
 
     const handleLogin = (ev) => {
         ev.preventDefault();
@@ -20,9 +15,7 @@ const Login =({isNewAccount, email, username, password, passConfirm, error,
         }
         const passObj = (isNewAccount) ? {username, email, password, passConfirm}
             : {email, password};
-        getToken (passObj, isNewAccount)
-            .then((token) => {authorizationSuccess(token)})
-            .catch((err) => {catchErr(err)})
+        authorizationRequest(passObj, isNewAccount);
     }
 
     const formContent = (isNewAccount) ? 
@@ -43,8 +36,8 @@ const Login =({isNewAccount, email, username, password, passConfirm, error,
     )
 };
 
-const mapStateToProps = ({email, password, username, passConfirm, 
-                        isNewAccount, error}) => {
+const mapStateToProps = ({loginState}) => {
+    const {email, password, username, passConfirm, isNewAccount, error} = loginState;
     return {
         email,
         password,
@@ -59,6 +52,6 @@ const mapDispatchToProps = {
     notNewAccount,
     inputChanged,
     catchErr,
-    authorizationSuccess
+    authorizationRequest
 }
-export default withPwApi( connect(mapStateToProps, mapDispatchToProps) (Login));
+export default connect(mapStateToProps, mapDispatchToProps) (Login);

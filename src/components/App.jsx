@@ -1,6 +1,6 @@
 import React from "react";
 import Main from "./Main/Main";
-import Login from "./Login/Login";
+import Login from "./Login/Login.jsx";
 import { connect } from 'react-redux';
 import './App.css';
 
@@ -13,6 +13,7 @@ const App = ({token}) => {
         </div>
     )
 };
-const mapStateToProps = ({token}) => {return {token}};
+const mapStateToProps = ({loginState}) => {
+    return {token: loginState.token}};
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(App); 

@@ -2,22 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dialog from '../../Dialog/Dialog';
 import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
-import withPwApi from '../../hoc-helpers/withPwApi';
-import { catchErr, clearErr, inputChanged, handleAutocompleteSelect,
-	createTransactionRequest, createTransactionSuccess,
-	showDialog, removeDialog, clearMessage} from '../../../actions/actions';
+import getUsersList from '../../../services/pw-api-service/getUsersList';
+import { handleAutocompleteSelect, createTransactionRequest, showDialog, removeDialog,
+	inputChanged, clearErr, catchErr} from '../../../actions/transactionActions';
 import './Transaction.css';
 
-let timeout;
-
-const Transaction = ({pwApi, recipient, error, message, amount, isConfirmNeeded,
-					token,
-					inputChanged, catchErr, clearErr, handleAutocompleteSelect,
-					createTransactionRequest, createTransactionSuccess,
-					showDialog, removeDialog, clearMessage, updateTransList}) => {
+const Transaction = ({recipient, error, message, amount, isConfirmNeeded, token,
+			inputChanged, catchErr, clearErr, handleAutocompleteSelect,
+			createTransactionRequest, showDialog, removeDialog, updateTransList,
+			updateBalance}) => {
     
-	const {createTransaction, getUsersList} = pwApi;
-
 	const onSubmit = (ev) => {
 		ev.preventDefault();
 		if (!amount || parseFloat(amount) <= 0)  {		// Local validation
@@ -26,23 +20,10 @@ const Transaction = ({pwApi, recipient, error, message, amount, isConfirmNeeded,
 		showDialog();
     }
 
-	const handleConfirm = (confirmed) => {	// Send request to register new
-											// transaction if user confirmed
+	const handleConfirm = (confirmed) => {
 		removeDialog();
 		if (confirmed) {
-			timeout = setTimeout(()=>{
-				createTransactionRequest();
-			},1000);
-			clearMessage();
-			createTransaction(token, recipient, amount)
-				.then((data) => {
-					clearTimeout(timeout);
-					createTransactionSuccess(data);
-					updateTransList();
-				})
-				.catch((err) => {
-					clearTimeout(timeout);
-					catchErr(err)});
+			createTransactionRequest(token, recipient, amount, updateTransList, updateBalance);
 		}
 	}
 
@@ -71,8 +52,9 @@ const Transaction = ({pwApi, recipient, error, message, amount, isConfirmNeeded,
 		</>
 		)
 }
-const mapStateToProps = (
-			{recipient, error, message, amount, isConfirmNeeded, token}) => {
+const mapStateToProps = ({loginState, transactionState}) => {
+	const {recipient, error, message, amount, isConfirmNeeded} = transactionState;
+	const {token} = loginState;
 	return {recipient, error, message, amount, isConfirmNeeded, token}
 }
 
@@ -82,9 +64,7 @@ const mapDispatchToProps = {
 	clearErr,
 	handleAutocompleteSelect,
 	createTransactionRequest,
-	createTransactionSuccess,
 	showDialog,
-	removeDialog,
-	clearMessage
+	removeDialog
 }
-export default withPwApi( connect(mapStateToProps, mapDispatchToProps) (Transaction));
+export default connect(mapStateToProps, mapDispatchToProps) (Transaction);

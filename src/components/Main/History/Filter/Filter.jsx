@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { inputChanged, handleFilterClear,
-        handleFilterClick} from "../../../../actions/actions";
+import {inputChanged, handleFilterClear, handleFilterClick} from "../../../../actions/filterActions";
 import './Filter.css';
 
 const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, handleFilterClear})  => {
@@ -40,9 +39,11 @@ const Filter = ({filterString, inputChanged, filterFlag, handleFilterClick, hand
         </div>
     )
 }
-const mapStateToProps = ({filterString, filterFlag}) => { return {
-    filterString,
-    filterFlag
+const mapStateToProps = ({filterState}) => { 
+    const {filterString, filterFlag} = filterState;
+    return {
+        filterString,
+        filterFlag
 }};
 const mapDispatchToProps = {
     inputChanged,
