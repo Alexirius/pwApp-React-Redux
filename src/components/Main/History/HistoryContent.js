@@ -38,8 +38,8 @@ const HistoryContent = ({historyArray, filterString, filterFlag}) => {
 	},[historyArray, filterString, filterFlag]);
     
 	if (!historyArray.length) {
-        return 'You have no Transactions History yet.';
-    }
+		return 'You have no Transactions History yet.';
+	}
     if (!filteredArray.length) {
         return 'No matches found.';
     }
