@@ -39,8 +39,7 @@ const AutocompleteInput = ({name = 'autocomplete',
         const {value} = ev.target;
         if (value.length) {
             clearTimeout(timeout);
-            timeout = setTimeout( 
-                enableAutocomplete(value),300);
+            timeout = setTimeout(()=>enableAutocomplete(value),300);
         } else {
             disableAutocomplete();
         }
