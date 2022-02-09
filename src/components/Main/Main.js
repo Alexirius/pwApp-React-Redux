@@ -9,7 +9,6 @@ import './Main.css';
 let timeout = '';
 
 const Main = (props) => {
-
     const [state, setstate] = useState({
 		historyArray: [],
         loading: false

@@ -3,7 +3,6 @@ import React from 'react';
 const HistoryContent = React.memo(({historyArray, filterString, filterFlag}) => {
 
     const filterArray = (arr) => {
-		console.log('filterArray');
 		if (filterString.length) {          //filter table by any field values
 			arr = arr.filter((curObj) => {
 				return curObj.date.toUpperCase().includes(filterString.toUpperCase()) ||
@@ -21,7 +20,6 @@ const HistoryContent = React.memo(({historyArray, filterString, filterFlag}) => 
 	}
 
     const renderTable = (arr) => {
-		console.log('renderTable');
 		return arr.map( (item) => {
 			const {id, date, username, amount, balance} = item;
 			return (

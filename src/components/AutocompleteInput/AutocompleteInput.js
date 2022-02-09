@@ -51,7 +51,7 @@ const AutocompleteInput = ({name = 'autocomplete',
 			.then((res) => {
 				clearErr();
 				if (res.length) {
-					document.body.addEventListener('click', onBodyClick);
+					document.body.onclick = onBodyClick;
 					setItemsList(res);
 				} else {
 					disableAutocomplete();
@@ -70,7 +70,7 @@ const AutocompleteInput = ({name = 'autocomplete',
     const disableAutocomplete = () => {
 		setItemsList([]);
         setFocusedItem(0);
-		document.body.removeEventListener('click', onBodyClick);
+        document.body.onclick = undefined;
 	}
 
     const onItemClick = (ev) => {		// Click on Autocomplete List Item
