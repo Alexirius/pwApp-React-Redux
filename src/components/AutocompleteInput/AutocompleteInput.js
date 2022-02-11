@@ -14,11 +14,10 @@ props:
     clearErr: function - clears error, arg: none.
 */
  
-import React, {createRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import AutocompleteList from "./AutocompleteList";
 import './AutocompleteInput.css'
 
-const listRef = createRef();
 let timeout;
 
 const AutocompleteInput = ({name = 'autocomplete',
@@ -50,7 +49,6 @@ const AutocompleteInput = ({name = 'autocomplete',
 			.then((res) => {
 				clearErr();
 				if (res.length) {
-					document.body.onclick = onBodyClick;
 					setItemsList(res);
 				} else {
 					disableAutocomplete();
@@ -59,17 +57,9 @@ const AutocompleteInput = ({name = 'autocomplete',
 			.catch((err) => {catchError(err)});
 	};
 
-    const onBodyClick = (ev) => {		// Click out of Autocomplete List area
-        const listDiv=listRef.current;
-		if (listDiv && !listDiv.contains(ev.target)) {
-			disableAutocomplete();
-		}
-	}
-
     const disableAutocomplete = () => {
 		setItemsList([]);
         setFocusedItem(0);
-        document.body.onclick = undefined;
 	}
 
     const onItemClick = (ev) => {		// Click on Autocomplete List Item
@@ -105,6 +95,14 @@ const AutocompleteInput = ({name = 'autocomplete',
 		if (index < 0) return focusItem(itemsList.length - 1);
 		setFocusedItem(index);
 	}
+
+    useEffect(() => {
+        document.body.onclick = disableAutocomplete;
+      return () => {
+        document.body.onclick = undefined;
+      }
+    }, [])
+
     return (
         <span className='autocomplete-wrap'>
             <input type="text" name={name} value={value} id="autocomplete-input"
@@ -112,8 +110,7 @@ const AutocompleteInput = ({name = 'autocomplete',
                 onChange = {onChange} onKeyDown = {onKeyPressed} />
             <AutocompleteList itemsList = {itemsList}
                             focusedItem = {focusedItem}
-                            onItemClick = {onItemClick}
-                            listRef = {listRef} />
+                            onItemClick = {onItemClick} />
         </span>
     )
 }
