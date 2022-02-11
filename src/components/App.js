@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useCallback,useMemo} from "react";
 import Main from "./Main/Main";
 import Login from "./Login/Login";
 import withPwApi from "./hoc-helpers/withPwApi";
@@ -6,13 +6,13 @@ import './App.css';
 
 const App = ({pwApi}) => {
 
-  const initialState ={
+  const initialState = useMemo(()=> {return {
     token: '',
     userId: '',
     userName: '',
     balance: '',
     error: null
-  }
+  }},[])
   const [state, setstate] = useState(initialState)
   const {getToken, getUserInfo} = pwApi;
 
@@ -62,13 +62,11 @@ const App = ({pwApi}) => {
     setstate((state) => {return {...state, error: null}});
   }
 
-  const handleLogout = () => {
-    setstate(initialState);
-  }
+  const handleLogout = useCallback(() => {setstate(initialState)}, [initialState]);
 
   const {token, userName, balance, error} = state;
   const appContent = (token) ?
-      <Main userName={userName} balance={balance} token={token} error={error} 
+    <Main userName={userName} balance={balance} token={token} error={error}
             handleLogout={handleLogout}
             updateBalance={updateBalance}
             clearErr={clearErr}

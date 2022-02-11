@@ -2,7 +2,7 @@ import React from 'react';
 import Logo from './Logo/Logo';
 import './Header.css';
 
-const Header = ({ userName, balance, handleLogout }) => {
+const Header = React.memo(({ userName, balance, handleLogout }) => {
     return (
         <header>
             <div className="header-wrap">
@@ -27,6 +27,6 @@ const Header = ({ userName, balance, handleLogout }) => {
 
         </header>
     )
-}
+});
 
 export default Header;

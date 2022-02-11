@@ -3,7 +3,7 @@ import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
 import './History.css';
 
-const History = ({historyArray})=>{
+const History = React.memo(({historyArray})=>{
 
 	const [filterString, setfilterString] = useState('');
 	const [filterFlag, setfilterFlag] = useState('all');
@@ -27,5 +27,5 @@ const History = ({historyArray})=>{
 					filterString={filterString} filterFlag={filterFlag} />
 		</div>
 	)
-};
+});
 export default History;

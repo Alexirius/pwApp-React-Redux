@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HistoryContent = React.memo(({historyArray, filterString, filterFlag}) => {
+const HistoryContent = ({historyArray, filterString, filterFlag}) => {
 
     const filterArray = (arr) => {
 		if (filterString.length) {          //filter table by any field values
@@ -59,6 +59,6 @@ const HistoryContent = React.memo(({historyArray, filterString, filterFlag}) => 
             </tbody>
         </table>
     );
-});
+};
 
 export default HistoryContent;
