@@ -98,9 +98,7 @@ const AutocompleteInput = ({name = 'autocomplete',
 
     useEffect(() => {
         document.body.onclick = disableAutocomplete;
-      return () => {
-        document.body.onclick = undefined;
-      }
+        return () => {document.body.onclick = undefined;}
     }, [])
 
     return (
