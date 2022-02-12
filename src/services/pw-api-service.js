@@ -2,7 +2,8 @@
 
 export default class PwApiService {
 
-    _baseUrl = 'http://193.124.114.46:3001/';
+    // _baseUrl = 'http://193.124.114.46:3001/';
+    _baseUrl = 'http://localhost:5000/';
 
     getResponse = async (url, init) => {
         const res = await fetch(`${this._baseUrl}${url}`, init);

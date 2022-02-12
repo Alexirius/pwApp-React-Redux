@@ -5,16 +5,15 @@ Also click out of Dialog area may be used to close the Dialog with "No" answer.
 
 */
 
-import React, {useState, useEffect, createRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import './Dialog.css';
 
 const Dialog = ({header, message, handleYes, handleNo}) => {
 
     const [activeYes, setActive] = useState(false)
-    const dialogContent = createRef();
 
     const clickOnBack = (ev) =>{        // Click out of Dialog area
-		if (dialogContent.current && !dialogContent.current.contains(ev.target)) {
+		if (ev.target === ev.currentTarget) {
             handleNo();
         }
     }
@@ -32,10 +31,8 @@ const Dialog = ({header, message, handleYes, handleNo}) => {
     }
 
     useEffect(() => {
-        document.body.addEventListener('click', clickOnBack);
         document.body.addEventListener('keydown', handleKeyboard);
         return () => {
-            document.body.removeEventListener('click', clickOnBack);
             document.body.removeEventListener('keydown', handleKeyboard);
         }
     // eslint-disable-next-line
@@ -43,8 +40,8 @@ const Dialog = ({header, message, handleYes, handleNo}) => {
 
 
     return (
-        <div id="back-dialog">
-            <div id="dialog-content" ref={dialogContent}>
+        <div id="back-dialog" onClick={clickOnBack}>
+            <div id="dialog-content" >
                 <div id="dialog-header">{header}</div>
                 <div id="dialog-text">{message}</div>
                 <button className={(activeYes)?'btn active':'btn'} onClick={handleYes}>Yes</button>
