@@ -14,7 +14,7 @@ props:
     clearErr: function - clears error, arg: none.
 */
  
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import AutocompleteList from "./AutocompleteList";
 import './AutocompleteInput.css'
 
@@ -96,19 +96,18 @@ const AutocompleteInput = ({name = 'autocomplete',
 		setFocusedItem(index);
 	}
 
-    useEffect(() => {
-        document.body.onclick = disableAutocomplete;
-        return () => {document.body.onclick = undefined;}
-    }, [])
+    const list = (!itemsList.length) ? null :
+        <AutocompleteList itemsList = {itemsList}
+            focusedItem = {focusedItem}
+            onItemClick = {onItemClick} 
+            onBackClick = {disableAutocomplete} />;
 
     return (
         <span className='autocomplete-wrap'>
             <input type="text" name={name} value={value} id="autocomplete-input"
                 placeholder={placeholder} autoComplete='off'
                 onChange = {onChange} onKeyDown = {onKeyPressed} />
-            <AutocompleteList itemsList = {itemsList}
-                            focusedItem = {focusedItem}
-                            onItemClick = {onItemClick} />
+            {list}
         </span>
     )
 }
