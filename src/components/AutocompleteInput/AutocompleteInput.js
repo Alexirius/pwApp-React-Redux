@@ -1,20 +1,10 @@
 /* Reuseable Component for Autocomplete input with keyboard support.
     supported keys: <Up> & <Down> arrows, <Esc>, <Enter>
     Can be used with both controlled & uncontrolled inputs
-
-props:
-    name: string;
-    value: string;
-    placeholder: string;
-    handleChange: function - input value change handler, arg: (event);
-    getData: -Required- async function (...getDataArgs, input_value) => promise => [{id, name}];
-    getDataArgs: array - args list for getData function;
-    handleSelect: -Required- function - autocomplete select handler, arg: (selected string) Required;
-    catchError: function - error handler, arg: (error: error);
-    clearErr: function - clears error, arg: none.
 */
- 
+
 import React, {useState} from "react";
+import PropTypes from 'prop-types';
 import AutocompleteList from "./AutocompleteList";
 import './AutocompleteInput.css'
 
@@ -96,12 +86,13 @@ const AutocompleteInput = ({name = 'autocomplete',
 		setFocusedItem(index);
 	}
 
-    const list = (!itemsList.length) ? null :
-        <AutocompleteList itemsList = {itemsList}
+    const list = !!itemsList.length && 
+        <AutocompleteList
+            itemsList = {itemsList}
             focusedItem = {focusedItem}
             onItemClick = {onItemClick} 
-            onBackClick = {disableAutocomplete} />;
-
+            onBackClick = {disableAutocomplete}
+        />;
     return (
         <span className='autocomplete-wrap'>
             <input type="text" name={name} value={value} id="autocomplete-input"
@@ -110,5 +101,18 @@ const AutocompleteInput = ({name = 'autocomplete',
             {list}
         </span>
     )
-}
+};
+
+AutocompleteInput.propTypes = {
+    name: PropTypes.string,
+    value: PropTypes.string,
+    placeholder: PropTypes.string,
+    handleChange: PropTypes.func,         // input value change handler, arg: (event)
+    getData: PropTypes.func.isRequired,   // async (...getDataArgs, searchString) => [{id, name}]
+    getDataArgs: PropTypes.array,         // args list for getData function
+    handleSelect: PropTypes.func.isRequired,  // arg: (selected_string)
+    catchError: PropTypes.func,           // error handler, arg: (error)
+    clearErr: PropTypes.func              // arg: none
+};
+
 export default AutocompleteInput;

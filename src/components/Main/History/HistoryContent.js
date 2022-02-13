@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const HistoryContent = ({historyArray, filterString, filterFlag}) => {
 
@@ -61,4 +62,15 @@ const HistoryContent = ({historyArray, filterString, filterFlag}) => {
     );
 };
 
+History.propTypes = {
+	historyArray: PropTypes.arrayOf(PropTypes.shape({
+		amount: PropTypes.number.isRequired,
+		balance: PropTypes.number.isRequired,
+		date: PropTypes.string.isRequired,
+		id: PropTypes.number.isRequired,
+		username: PropTypes.string.isRequired
+	})).isRequired,
+	filterString: PropTypes.string.isRequired,
+	filterFlag: PropTypes.oneOf(['all', 'debit', 'credit']).isRequired
+}
 export default HistoryContent;

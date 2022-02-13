@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import './Filter.css';
 
 const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilterClear})  => {
@@ -35,7 +36,14 @@ const Filter = ({filterString, onFilterChange, filterFlag, onFilterClick, onFilt
                 {buttons}
             </span>
         </div>
-    )
-}
+    );
+};
 
+Filter.propTypes = {
+    filterString: PropTypes.string.isRequired,
+    onFilterChange: PropTypes.func.isRequired,
+    filterFlag: PropTypes.oneOf(['all', 'debit', 'credit']).isRequired,
+    onFilterClick: PropTypes.func.isRequired,
+    onFilterClear: PropTypes.func.isRequired
+}
 export default Filter;

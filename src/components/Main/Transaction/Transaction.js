@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import Dialog from '../../Dialog/Dialog';
 import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
 import withPwApi from '../../hoc-helpers/withPwApi';
@@ -36,7 +37,7 @@ const Transaction = (props) => {
 	}
 
 	const handleConfirm = (confirmed) => {			// Send request to register new
-													// transaction if user confirmed
+													// transaction if confirmed by user
 		setstate((state)=>{return {...state, isConfirmNeeded: false}});
 
 		if (confirmed) {
@@ -84,6 +85,16 @@ const Transaction = (props) => {
 			</form>
 			{dialog}
 		</>
-		)
-}
+		);
+};
+
+Transaction.propTypes = {
+	error: PropTypes.string,
+	token: PropTypes.string.isRequired,
+	catchError: PropTypes.func.isRequired,
+	clearErr: PropTypes.func.isRequired,
+	updateTransList: PropTypes.func.isRequired,
+	updateBalance: PropTypes.func.isRequired,
+	throwLocalError: PropTypes.func.isRequired,
+};
 export default withPwApi(Transaction);

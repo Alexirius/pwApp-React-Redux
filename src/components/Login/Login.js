@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
 import './Login.css';
@@ -51,6 +52,13 @@ const Login = ({handleLogin, clearErr, error}) => {
                 </div>
             </form>
         </div>
-    )
+    );
+};
+
+Login.propTypes = {
+    handleLogin: PropTypes.func.isRequired,
+    clearErr: PropTypes.func.isRequired,
+    error: PropTypes.string
+
 };
 export default Login;

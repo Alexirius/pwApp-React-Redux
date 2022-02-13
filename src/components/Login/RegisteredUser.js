@@ -1,6 +1,8 @@
-// -- Login Form for Registered user -- //
+/* -- Login Form for Registered user -- */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+
 const RegisteredUser = ({email, password, onChange, onModeChange}) => {
     return (
         <>
@@ -13,7 +15,13 @@ const RegisteredUser = ({email, password, onChange, onModeChange}) => {
             <button id="register-btn" type="button" onClick={onModeChange}>
                 Create Free Account</button>
         </>
-    )
-}
+    );
+};
 
+RegisteredUser.propTypes = {
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onModeChange: PropTypes.func.isRequired
+}
 export default RegisteredUser;

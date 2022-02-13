@@ -1,6 +1,8 @@
-// Register New User form
+/* Register New User form */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+
 const NewUser = ({email, username, password, passConfirm, onChange, onModeChange}) => {
     return (
         <>
@@ -17,6 +19,13 @@ const NewUser = ({email, username, password, passConfirm, onChange, onModeChange
             <button id="register-btn" type="button" onClick={onModeChange}>
                 Have PW Account</button>
         </>
-    )
+    );
+};
+
+NewUser.propTypes = {
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onModeChange: PropTypes.func.isRequired
 }
 export default NewUser;

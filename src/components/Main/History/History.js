@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
 import './History.css';
@@ -26,6 +27,16 @@ const History = React.memo(({historyArray})=>{
 			<HistoryContent historyArray={historyArray}
 					filterString={filterString} filterFlag={filterFlag} />
 		</div>
-	)
+	);
 });
+
+History.propTypes = {
+	historyArray: PropTypes.arrayOf(PropTypes.shape({
+		amount: PropTypes.number.isRequired,
+		balance: PropTypes.number.isRequired,
+		date: PropTypes.string.isRequired,
+		id: PropTypes.number.isRequired,
+		username: PropTypes.string.isRequired
+	})).isRequired,
+}
 export default History;

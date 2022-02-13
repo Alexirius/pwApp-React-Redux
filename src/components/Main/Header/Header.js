@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Logo from './Logo/Logo';
 import './Header.css';
 
@@ -29,4 +30,9 @@ const Header = React.memo(({ userName, balance, handleLogout }) => {
     )
 });
 
+Header.propTypes = {
+    userName: PropTypes.string.isRequired,
+    balance: PropTypes.number,
+    handleLogout: PropTypes.func.isRequired
+};
 export default Header;

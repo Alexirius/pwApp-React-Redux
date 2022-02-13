@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import Header from "./Header/Header";
 import History from "./History/History";
 import Transaction from "./Transaction/Transaction";
@@ -47,6 +48,19 @@ const Main = (props) => {
             <History historyArray={historyArray} />
             {spinner}
         </div>
-    )
-}
+    );
+};
+
+Main.propTypes = {
+    userName: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
+    error: PropTypes.string,
+    handleLogout: PropTypes.func.isRequired,
+    updateBalance: PropTypes.func.isRequired,
+    clearErr: PropTypes.func.isRequired,
+    throwLocalError: PropTypes.func.isRequired,
+    catchError: PropTypes.func.isRequired,
+};
+
 export default withPwApi(Main);

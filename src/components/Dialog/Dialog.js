@@ -6,9 +6,14 @@ Also click out of Dialog area may be used to close the Dialog with "No" answer.
 */
 
 import React, {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
 import './Dialog.css';
 
-const Dialog = ({header, message, handleYes, handleNo}) => {
+const Dialog = ({
+    header='Confirm Operation',
+    message,
+    handleYes,
+    handleNo=()=>{}}) => {
 
     const [activeYes, setActive] = useState(false)
 
@@ -49,5 +54,12 @@ const Dialog = ({header, message, handleYes, handleNo}) => {
             </div>
         </div>
     )
-}
+};
+
+Dialog.propTypes = {
+    header: PropTypes.string,
+    message: PropTypes.string.isRequired,
+    handleYes: PropTypes.func.isRequired,
+    handleNo: PropTypes.func
+};
 export default Dialog;
