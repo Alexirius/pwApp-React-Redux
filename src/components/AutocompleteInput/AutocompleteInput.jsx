@@ -2,7 +2,7 @@
     supported keys: <Up> & <Down> arrows, <Esc>, <Enter>
     Can be used with both controlled & uncontrolled inputs
 */
- 
+
 import React from "react";
 import AutocompleteList from "./AutocompleteList";
 import PropTypes from 'prop-types';
@@ -25,26 +25,26 @@ export default class AutocompleteInput extends React.Component {
         name: 'autocomplete',
         value: undefined,                   // for uncontrolled input
         placeholder: 'autocomplete',
-        handleChange: ()=>{},
+        handleChange: () => { },
         getDataArgs: [],
-        catchError: ()=>{},
-        clearErr: ()=>{}
+        catchError: () => { },
+        clearErr: () => { }
     }
 
     state = {
-		itemsList: [],
-		focusedItem: 0,
-	}
+        itemsList: [],
+        focusedItem: 0,
+    }
 
     listRef = React.createRef();
 
     onChange = (ev) => {
-        const {handleChange} = this.props;
+        const { handleChange } = this.props;
         handleChange(ev);
-        const {value} = ev.target;
+        const { value } = ev.target;
         if (value.length) {
             clearTimeout(this.timeout);
-            this.timeout = setTimeout( 
+            this.timeout = setTimeout(
                 this.enableAutocomplete(value), 300)
         } else {
             this.disableAutocomplete();
@@ -52,78 +52,80 @@ export default class AutocompleteInput extends React.Component {
     }
 
     enableAutocomplete = (string) => {
-		const {catchError, clearErr, getData, getDataArgs} = this.props;
+        const { catchError, clearErr, getData, getDataArgs } = this.props;
 
-		getData(...getDataArgs, string)	// Getting filtered Users List
-			.then((res) => {
-				clearErr();
-				if (res.length) {
-					document.body.addEventListener('click', this.onBodyClick);
-					this.setState({itemsList: res});
-				} else {
-					this.disableAutocomplete();
-				}
-			})
-			.catch((err) => {catchError(err)});
-	};
+        getData(...getDataArgs, string)	// Getting filtered Users List
+            .then((res) => {
+                clearErr();
+                if (res.length) {
+                    document.body.addEventListener('click', this.onBodyClick);
+                    this.setState({ itemsList: res });
+                } else {
+                    this.disableAutocomplete();
+                }
+            })
+            .catch((err) => { catchError(err) });
+    };
 
     onBodyClick = (ev) => {		// Click out of Autocomplete List area
-        const listDiv=this.listRef.current;
-		if (listDiv && !listDiv.contains(ev.target)) {
-			this.disableAutocomplete();
-		}
-	}
+        const listDiv = this.listRef.current;
+        if (listDiv && !listDiv.contains(ev.target)) {
+            this.disableAutocomplete();
+        }
+    }
 
     disableAutocomplete = () => {
-		this.setState({itemsList: [], focusedItem: 0});
-		document.body.removeEventListener('click', this.onBodyClick);
-	}
+        this.setState({ itemsList: [], focusedItem: 0 });
+    }
 
     onItemClick = (ev) => {		// Click on Autocomplete List Item
-        const {onSelect} = this.props;
+        const { onSelect } = this.props;
         onSelect(ev.target.innerText);
-		this.disableAutocomplete();
-	}
+        this.disableAutocomplete();
+    }
 
     onKeyPressed = (ev) => {		// keyboard handler for autocomplete
-		const {focusedItem, itemsList} = this.state;
-		const {keyCode} = ev;
-		if(keyCode === 40) { 					// arrow down
-			this.focusItem(focusedItem+1);
-		} else if(keyCode === 38) { 			//arrow up
-			this.focusItem(focusedItem-1);
-		} else if(keyCode === 27) { 			// escape
-			this.disableAutocomplete();
-		} else if(keyCode === 13) { 			// enter
-			ev.preventDefault();
-			if (itemsList.length) {
-                const {onSelect} = this.props;
+        const { focusedItem, itemsList } = this.state;
+        const { keyCode } = ev;
+        if (keyCode === 40) { 					// arrow down
+            this.focusItem(focusedItem + 1);
+        } else if (keyCode === 38) { 			//arrow up
+            this.focusItem(focusedItem - 1);
+        } else if (keyCode === 27) { 			// escape
+            this.disableAutocomplete();
+        } else if (keyCode === 13) { 			// enter
+            ev.preventDefault();
+            if (itemsList.length) {
+                const { onSelect } = this.props;
                 onSelect(itemsList[focusedItem].name);
-				this.disableAutocomplete();
-			}
-		}
-	}
+                this.disableAutocomplete();
+            }
+        }
+    }
 
     focusItem = (index) => {	            // in autocomplete list
-		const {itemsList} = this.state;
-		if (index > itemsList.length - 1) return this.focusItem(0);
-		if (index < 0) return this.focusItem(itemsList.length - 1);
-		this.setState({focusedItem: index});
-	}
+        const { itemsList } = this.state;
+        if (index > itemsList.length - 1) return this.focusItem(0);
+        if (index < 0) return this.focusItem(itemsList.length - 1);
+        this.setState({ focusedItem: index });
+    };
 
-    render () {
-        const {name,value,placeholder=''} = this.props;
-        const {itemsList, focusedItem} = this.state;
+    render() {
+        const { name, value, placeholder = '' } = this.props;
+        const { itemsList, focusedItem } = this.state;
+        const list = !!itemsList.length &&
+            <AutocompleteList
+                itemsList={itemsList}
+                focusedItem={focusedItem}
+                onItemClick={this.onItemClick}
+                onBackClick={this.disableAutocomplete}
+            />;
         return (
             <span className='autocomplete-wrap'>
                 <input type="text" name={name} value={value} id="autocomplete-input"
                     placeholder={placeholder} autoComplete='off' required
-                    onChange = {this.onChange} onKeyDown = {this.onKeyPressed}/>
-                <AutocompleteList
-                    list={itemsList}
-                    focusedItem={focusedItem}
-                    onItemClick={this.onItemClick} 
-                    listRef = {this.listRef} />
+                    onChange={this.onChange} onKeyDown={this.onKeyPressed} />
+                    {list}
             </span>
         )
     }

@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const AutocompleteList = ({list, focusedItem, onItemClick, listRef}) => {
-    if (!list.length) return null;
+const AutocompleteList = ({ itemsList, focusedItem, onItemClick, onBackClick }) => {
+    useEffect(() => {
+        document.body.onclick = onBackClick;
+        return () => { document.body.onclick = undefined; }
+    }, [onBackClick])
     return (
-        <div id='autocomplete-list' ref={listRef}>
-            {list.map((item,ind) => {
-                const {id, name} = item;
+        <div id='autocomplete-list'>
+            {itemsList.map((item, ind) => {
+                const { id, name } = item;
                 return (
-                    <div className={(ind===focusedItem)? 'listitem focused' : 'listitem'}
-                            key={id} onClick={onItemClick}>
+                    <div className={(ind === focusedItem) ? 'listitem focused' : 'listitem'}
+                        key={id} onClick={onItemClick}>
                         {name}
                     </div>
                 )
