@@ -1,7 +1,8 @@
 
 const getResponse = async (url, init) => {
 
-    const _baseUrl = 'http://193.124.114.46:3001/';
+    const _baseUrl = process.env.REACT_APP_BASE_URL;
+    console.log(`${_baseUrl}${url}`);
 
     const res = await fetch(`${_baseUrl}${url}`, init);
 

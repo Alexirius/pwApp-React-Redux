@@ -4,7 +4,7 @@ import Filter from './Filter/Filter';
 import HistoryContent from './HistoryContent';
 import './History.css';
 
-const History =({historyArray, filterString, filterFlag}) => {
+const History = ({ historyArray, filterString, filterFlag }) => {
 
 	const filterArray = (arr) => {
 		if (filterString.length) {          //filter table by any field values
@@ -16,14 +16,13 @@ const History =({historyArray, filterString, filterFlag}) => {
 			})
 		}
 		if (filterFlag === 'debit') {           // filter debit/credit
-			arr = arr.filter(({amount}) => amount > 0)
+			arr = arr.filter(({ amount }) => amount > 0)
 		} else if (filterFlag === 'credit') {
-			arr = arr.filter(({amount}) => amount < 0)
+			arr = arr.filter(({ amount }) => amount < 0)
 		}
 		return arr;
 	}
 	const filteredArray = filterArray(historyArray);
-	console.log(filteredArray);
 	let historyContent;
 	if (!historyArray.length) {
 		historyContent = 'You have no Transactions History yet.';
