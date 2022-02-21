@@ -1,56 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import Filter from './Filter/Filter';
+import { fetchHistoryRequest } from "../../../actions/mainActions";
 import HistoryContent from './HistoryContent';
+import Spinner from "../../UI/Spinner/Spinner";
 import './History.css';
 
-const History = ({ historyArray, filterString, filterFlag }) => {
+const History = () => {
 
-	const filterArray = (arr) => {
-		if (filterString.length) {          //filter table by any field values
-			arr = arr.filter((curObj) => {
-				return curObj.date.toUpperCase().includes(filterString.toUpperCase()) ||
-					curObj.username.toUpperCase().includes(filterString.toUpperCase()) ||
-					curObj.amount.toString().includes(filterString) ||
-					curObj.balance.toString().includes(filterString)
-			})
-		}
-		if (filterFlag === 'debit') {           // filter debit/credit
-			arr = arr.filter(({ amount }) => amount > 0)
-		} else if (filterFlag === 'credit') {
-			arr = arr.filter(({ amount }) => amount < 0)
-		}
-		return arr;
-	}
-	const filteredArray = filterArray(historyArray);
-	let historyContent;
-	if (!historyArray.length) {
-		historyContent = 'You have no Transactions History yet.';
-	} else if (!filteredArray.length) {
-		historyContent = 'No matches found.';
-	} else {
-		historyContent = <HistoryContent historyArray={filteredArray} />
-	}
+	const dispatch = useDispatch();
+	const token = useSelector(state => state.login.token);
+    const loading = useSelector(state => state.main.loading);
+
+	useEffect(() => {
+		dispatch(fetchHistoryRequest(token));
+		// eslint-disable-next-line
+	}, [])
 
 	return (
 		<div className="history">
 			<h2>Transactions History</h2>
 			<Filter />
-			{historyContent}
+			{(loading) ? <Spinner /> :<HistoryContent />}
 		</div>
 	)
 };
-
-History.propTypes = {
-	historyArray: PropTypes.arrayOf(PropTypes.shape({
-		amount: PropTypes.number.isRequired,
-		balance: PropTypes.number.isRequired,
-		date: PropTypes.string.isRequired,
-		id: PropTypes.number.isRequired,
-		username: PropTypes.string.isRequired
-	})).isRequired,
-	filterString: PropTypes.string.isRequired,
-	filterFlag: PropTypes.oneOf(['all', 'debit', 'credit']).isRequired
-}
 
 export default History;

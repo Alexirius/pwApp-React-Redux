@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {inputChanged, catchErr, clearErr, handleAutocompleteSelect,
+import {
+    inputChanged, catchErr, clearErr, handleAutocompleteSelect, transactionRequest,
     clearMessage, createTransactionSuccess, showDialog, removeDialog,
-    createTransactionRequest} from '../actions/transactionActions';
+} from '../actions/transactionActions';
 
 const initialState = {
     recipient: '',
@@ -14,38 +15,46 @@ const initialState = {
 export default createReducer(initialState, {
     [catchErr.type]: (state, action) => {
         console.log(action.payload);
-        return {...state,
+        return {
+            ...state,
             error: action.payload.toString(),
         };
     },
-    [clearErr.type]: (state, action) => ({...state,
-            error: '',
+    [clearErr.type]: (state, action) => ({
+        ...state,
+        error: '',
     }),
     [inputChanged.type]: (state, action) => {
         const { name, value } = action.payload;
-        return {...state,
+        return {
+            ...state,
             [name]: value,
         };
     },
-    [handleAutocompleteSelect.type]: (state, action) => ({...state,
+    [handleAutocompleteSelect.type]: (state, action) => ({
+        ...state,
         recipient: action.payload
     }),
-    [showDialog.type]: (state, action) => ({...state,
+    [showDialog.type]: (state, action) => ({
+        ...state,
         isConfirmNeeded: true,
         error: ''
     }),
-    [removeDialog.type]: (state, action) => ({...state,
+    [removeDialog.type]: (state, action) => ({
+        ...state,
         isConfirmNeeded: false,
     }),
-    [clearMessage.type]: (state, action) => ({...state,
+    [clearMessage.type]: (state, action) => ({
+        ...state,
         message: ''
     }),
-    [createTransactionRequest.type]: (state, action) => ({...state,
+    [transactionRequest.type]: (state, action) => ({
+        ...state,
         loading: true,
-        error: '',
-        message: ''
+        error: ''
     }),
-    [createTransactionSuccess.type]: (state, action) => ({...state,
+    [createTransactionSuccess.type]: (state, action) => ({
+        ...state,
         balance: action.payload.balance,
         loading: false,
         error: '',

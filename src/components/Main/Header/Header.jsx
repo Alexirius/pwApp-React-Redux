@@ -1,17 +1,30 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { handleLogout } from '../../../actions/loginActions';
-import Logo from './Logo/Logo';
+import { fetchUserInfoRequest } from '../../../actions/mainActions'
+import Logo from '../../UI/Logo/Logo';
 import './Header.css';
 
-const Header = ({ username, balance, handleLogout }) => {
+const Header = () => {
+
+    const dispatch = useDispatch();
+
+    const token = useSelector(state => state.login.token);
+    const username = useSelector(state => state.main.username);
+    const balance = useSelector(state => state.main.balance);
+
+    const onLogout = () => dispatch(handleLogout());
+
+    useEffect(() => {
+        dispatch(fetchUserInfoRequest(token));
+        // eslint-disable-next-line
+    }, [])
     return (
         <header>
             <div className="header-wrap">
                 <div className="app-header">
                     <div className="logo" id="logo">
-                            <Logo />
+                        <Logo />
                     </div>
                     <div className="title">
                         <h1>Your Parrot Wings Office</h1>
@@ -21,7 +34,7 @@ const Header = ({ username, balance, handleLogout }) => {
                         Your balance is <span className="output"> {balance} </span> PW.
                     </div>
                     <div className="btn-container">
-                        <button className='logout_btn' type='button' onClick={handleLogout} >Logout</button>
+                        <button className='logout_btn' type='button' onClick={onLogout} >Logout</button>
                     </div>
                 </div>
             </div>
@@ -29,20 +42,4 @@ const Header = ({ username, balance, handleLogout }) => {
     )
 }
 
-Header.propTypes = {
-    username: PropTypes.string.isRequired,
-    balance: PropTypes.number.isRequired,
-    handleLogout: PropTypes.func.isRequired
-}
-
-const mapStateToProps = ({mainState}) => {
-    const {username, balance} = mainState;
-    return {
-        username,
-        balance,
-    }
-}
-const mapDispatchToProps = {
-    handleLogout
-}
-export default connect(mapStateToProps, mapDispatchToProps) (Header);
+export default Header;

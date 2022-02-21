@@ -1,11 +1,12 @@
 import React from "react";
 import Main from "./Main/Main";
 import Login from "./Login/Login.jsx";
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import './App.css';
 
-const App = ({token}) => {
+const App = () => {
+    const token = useSelector(state => state.login.token);
+
     const appContent = (token) ? <Main /> : <Login />
     return (
         <div className="app">
@@ -15,11 +16,4 @@ const App = ({token}) => {
     )
 };
 
-App.propTypes = {
-    token: PropTypes.string.isRequired
-}
-
-const mapStateToProps = ({loginState}) => {
-    return {token: loginState.token}};
-
-export default connect(mapStateToProps)(App); 
+export default App; 

@@ -5,10 +5,10 @@ import filterReducer from './filterReducer';
 import transactionReducer from './transactionReducer';
 
 const rootReducer = combineReducers({
-    loginState:  loginReducer,
-    mainState:   mainReducer,
-    filterState: filterReducer,
-    transactionState: transactionReducer,
+    login: loginReducer,
+    main: mainReducer,
+    filter: filterReducer,
+    transaction: transactionReducer,
 })
 
 export default rootReducer;

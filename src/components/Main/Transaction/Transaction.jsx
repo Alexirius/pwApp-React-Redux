@@ -1,35 +1,46 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import Dialog from '../../Dialog/Dialog';
-import AutocompleteInput from '../../AutocompleteInput/AutocompleteInput';
+import { useDispatch, useSelector } from 'react-redux';
+import Dialog from '../../UI/Dialog/Dialog';
+import AutocompleteInput from '../../UI/AutocompleteInput/AutocompleteInput';
 import getUsersList from '../../../services/pw-api-service/getUsersList';
 import { handleAutocompleteSelect, createTransactionRequest, showDialog, removeDialog,
 	inputChanged, clearErr, catchErr, clearMessage} from '../../../actions/transactionActions';
+import Spinner from "../../UI/Spinner/Spinner";
 import './Transaction.css';
 
-const Transaction = ({recipient, error, message, amount, isConfirmNeeded, token, username,
-			inputChanged, catchErr, clearErr, handleAutocompleteSelect, clearMessage,
-			createTransactionRequest, showDialog, removeDialog, updateTransList}) => {
-    
+const Transaction = () => {
+
+	const dispatch = useDispatch();
+    const token = useSelector(state => state.login.token);
+    const amount = useSelector(state => state.transaction.amount);
+    const recipient = useSelector(state => state.transaction.recipient);
+    const isConfirmNeeded = useSelector(state => state.transaction.isConfirmNeeded);
+    const error = useSelector(state => state.transaction.error);
+    const message = useSelector(state => state.transaction.message);
+    const username = useSelector(state => state.main.username);
+    const loading = useSelector(state => state.transaction.loading);
+
 	const onSubmit = (ev) => {
 		ev.preventDefault();
-		clearMessage();
+		dispatch(clearMessage());
 		if (!amount || parseFloat(amount) <= 0)  {		// Local validation
-			return catchErr("Error: Invalid PW Amount")
+			return dispatch(catchErr("Error: Invalid PW Amount"))
 		}
 		if (recipient === username) {
-			return catchErr("Error: You can't send PW to yourself.")
+			return dispatch(catchErr("Error: You can't send PW to yourself."))
 		}
-		console.log(recipient, username);
-		showDialog();
+		dispatch(showDialog());
     }
 
 	const handleConfirm = (confirmed) => {
-		removeDialog();
+		dispatch(removeDialog());
 		if (confirmed) {
-			createTransactionRequest(token, recipient, amount, updateTransList);
+			dispatch(createTransactionRequest(token, recipient, amount));
 		}
+	}
+
+	const onAutocompleteSelect = (userName) => {
+		dispatch(handleAutocompleteSelect(userName))
 	}
 
 	const dialog = isConfirmNeeded && <Dialog header='Confirm Operation'
@@ -37,61 +48,26 @@ const Transaction = ({recipient, error, message, amount, isConfirmNeeded, token,
 						handleYes = {() => handleConfirm(true)}
 						handleNo = {()=>handleConfirm(false)} />;
 
+	if (loading) return <Spinner />
 	return (
 		<>
 			<form className="transaction" onSubmit={onSubmit}>
 				<h2>Create Transaction</h2>
 				<AutocompleteInput name='recipient' value ={recipient}
 					placeholder="Recipient's Name"
-					handleChange={ev=>inputChanged(ev.target)} 
+					handleChange={ev=>dispatch(inputChanged(ev.target))} 
 					getData = {getUsersList} getDataArgs = {[token]}
-					onSelect={handleAutocompleteSelect}
+					handleSelect={onAutocompleteSelect}
 					catchError={catchErr} clearErr={clearErr} />
 				<input type='number' id='amount' name='amount' placeholder="amount"
-						value={amount} onChange = {ev=>inputChanged(ev.target)} required />
+						value={amount} onChange = {ev=>dispatch(inputChanged(ev.target))} required />
 				<button className='send_btn' type='submit'>Send</button>
 				<div className="warning">{error}</div>
 				<div className = 'message'>{message}</div>
 			</form>
 			{dialog}
 		</>
-		)
+	)
 };
 
-Transaction.propTypes = {
-	recipient: PropTypes.string.isRequired,
-	error: PropTypes.string.isRequired,
-	message: PropTypes.string.isRequired,
-	amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number,]).isRequired,
-	isConfirmNeeded: PropTypes.bool.isRequired,
-	token: PropTypes.string.isRequired,
-	username: PropTypes.string.isRequired,
-	inputChanged: PropTypes.func.isRequired,
-	catchErr: PropTypes.func.isRequired,
-	clearErr: PropTypes.func.isRequired,
-	handleAutocompleteSelect: PropTypes.func.isRequired,
-	clearMessage: PropTypes.func.isRequired,
-	createTransactionRequest: PropTypes.func.isRequired,
-	showDialog: PropTypes.func.isRequired,
-	removeDialog: PropTypes.func.isRequired,
-	updateTransList: PropTypes.func.isRequired
-}
-
-const mapStateToProps = ({loginState, transactionState, mainState}) => {
-	const {recipient, error, message, amount, isConfirmNeeded} = transactionState;
-	const {token} = loginState;
-	const {username} = mainState;
-	return {recipient, error, message, amount, isConfirmNeeded, token, username}
-}
-
-const mapDispatchToProps = {
-	inputChanged,
-	catchErr,
-	clearErr,
-	handleAutocompleteSelect,
-	createTransactionRequest,
-	showDialog,
-	removeDialog,
-	clearMessage
-}
-export default connect(mapStateToProps, mapDispatchToProps) (Transaction);
+export default Transaction;

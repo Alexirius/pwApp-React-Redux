@@ -1,33 +1,41 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import NewUser from './NewUser';
 import RegisteredUser from './RegisteredUser';
-import {newAccount, notNewAccount, authorizationRequest, inputChanged, catchErr} from '../../actions/loginActions';
+import { authorizationRequest, inputChanged, catchErr } from '../../actions/loginActions';
 import './Login.css';
 
-const Login =({isNewAccount, email, username, password, passConfirm, error,
-    newAccount, notNewAccount, inputChanged, catchErr, authorizationRequest}) => {
+const Login = () => {
+    const dispatch = useDispatch();
+
+    const email = useSelector(state => state.login.email);
+    const password = useSelector(state => state.login.password);
+    const passConfirm = useSelector(state => state.login.passConfirm);
+    const username = useSelector(state => state.login.username);
+    const isNewAccount = useSelector(state => state.login.isNewAccount);
+    const error = useSelector(state => state.login.error);
+
+    const passObj = (isNewAccount) ? { username, email, password, passConfirm }
+        : { email, password };
 
     const handleLogin = (ev) => {
         ev.preventDefault();
         if (!/^[\w-.]+@[\w-]+\.[a-z]{2,4}$/i.test(email)) {
-            return catchErr('Error: Invalid email!')
+            return dispatch(catchErr('Error: Invalid email!'))
         }
         if (isNewAccount && password !== passConfirm) {
-            return catchErr('Error: Password confirm mismatch!')
+            return dispatch(catchErr('Error: Password confirm mismatch!'))
         }
-        const passObj = (isNewAccount) ? {username, email, password, passConfirm}
-            : {email, password};
-        authorizationRequest(passObj, isNewAccount);
+        dispatch(authorizationRequest(passObj, isNewAccount));
     }
 
-    const formContent = (isNewAccount) ? 
-        <NewUser email={email} username={username} password={password} passConfirm={passConfirm}
-            onChange= {(ev)=> inputChanged(ev.target)} onModeChange= {notNewAccount} />
-    :
-        <RegisteredUser email={email} password={password}
-            onChange={(ev)=> inputChanged(ev.target)} onModeChange={newAccount} />;
+    const onChange = (ev) => dispatch(inputChanged(ev.target))
+
+    const formContent = (isNewAccount) ?
+        <NewUser {...passObj} onChange={onChange} />
+        :
+        <RegisteredUser {...passObj} onChange={onChange} />;
+
     return (
         <div className="login-page">
             <form className="login-form" onSubmit={handleLogin} >
@@ -40,36 +48,4 @@ const Login =({isNewAccount, email, username, password, passConfirm, error,
     )
 };
 
-Login.propTypes = {
-    isNewAccount: PropTypes.bool.isRequired,
-    email: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    passConfirm: PropTypes.string.isRequired,
-    error: PropTypes.string.isRequired,
-    newAccount: PropTypes.func.isRequired,
-    notNewAccount: PropTypes.func.isRequired,
-    inputChanged: PropTypes.func.isRequired,
-    catchErr: PropTypes.func.isRequired,
-    authorizationRequest: PropTypes.func.isRequired
-}
-
-const mapStateToProps = ({loginState}) => {
-    const {email, password, username, passConfirm, isNewAccount, error} = loginState;
-    return {
-        email,
-        password,
-        username,
-        passConfirm,
-        isNewAccount,
-        error
-    }
-}
-const mapDispatchToProps = {
-    newAccount,
-    notNewAccount,
-    inputChanged,
-    catchErr,
-    authorizationRequest
-}
-export default connect(mapStateToProps, mapDispatchToProps) (Login);
+export default Login;

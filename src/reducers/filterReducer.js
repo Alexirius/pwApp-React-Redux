@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {handleFilterClear , handleFilterClick, filterStringChanged} from '../actions/filterActions';
+import { handleFilterClear, handleFilterClick, filterStringChanged } from '../actions/filterActions';
 
 const initialState = {
     filterString: '',
@@ -7,15 +7,18 @@ const initialState = {
 }
 
 export default createReducer(initialState, {
-    [handleFilterClear.type]: (state, action) => ({...state,
+    [handleFilterClear.type]: (state, action) => ({
+        ...state,
         filterString: ''
     }),
-    [handleFilterClick.type]: (state, action) => ({...state,
+    [handleFilterClick.type]: (state, action) => ({
+        ...state,
         filterFlag: action.payload
     }),
     [filterStringChanged.type]: (state, action) => {
         const { name, value } = action.payload;
-        return {...state,
+        return {
+            ...state,
             [name]: value,
         };
     }

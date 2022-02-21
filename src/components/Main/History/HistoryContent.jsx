@@ -1,7 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
-const HistoryContent = ({historyArray}) => {
+const HistoryContent = () => {
+
+    const historyArray = useSelector(state => state.main.historyArray);
+    const filterString = useSelector(state => state.filter.filterString);
+    const filterFlag = useSelector(state => state.filter.filterFlag);
+
+    const filterArray = (arr) => {
+		if (filterString.length) {          //filter table by any field values
+			arr = arr.filter((curObj) => {
+				return curObj.date.toUpperCase().includes(filterString.toUpperCase()) ||
+					curObj.username.toUpperCase().includes(filterString.toUpperCase()) ||
+					curObj.amount.toString().includes(filterString) ||
+					curObj.balance.toString().includes(filterString)
+			})
+		}
+		if (filterFlag === 'debit') {           // filter debit/credit
+			arr = arr.filter(({amount}) => amount > 0)
+		} else if (filterFlag === 'credit') {
+			arr = arr.filter(({amount}) => amount < 0)
+		}
+		return arr;
+	}
 
     const renderTable = (arr) => {
 		return arr.map( (item) => {
@@ -16,6 +37,14 @@ const HistoryContent = ({historyArray}) => {
 			)
 		});
 	}
+
+    if (!historyArray.length) {
+        return 'You have no Transactions History yet.';
+    }
+	const filteredArray = filterArray(historyArray);
+    if (!historyArray.length) {
+        return 'No matches found.';
+    }
 
     const tHead = (
         <thead>
@@ -32,19 +61,10 @@ const HistoryContent = ({historyArray}) => {
         <table className="history-table">
             {tHead}
             <tbody>
-                {renderTable(historyArray)}
+                {renderTable(filteredArray)}
             </tbody>
         </table>
     );
 };
-
-HistoryContent.propTypes = {
-    historyArray: PropTypes.arrayOf(PropTypes.shape({
-		amount: PropTypes.number.isRequired,
-		balance: PropTypes.number.isRequired,
-		date: PropTypes.string.isRequired,
-		id: PropTypes.number.isRequired,
-		username: PropTypes.string.isRequired
-	})).isRequired}
 
 export default HistoryContent;
