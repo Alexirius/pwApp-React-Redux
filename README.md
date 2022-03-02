@@ -1,21 +1,21 @@
 This is a test task.
 Backend for this App can be found on https://github.com/Alexirius/pwAPI-backend-Node
 
-#PW Application Overview
+# PW Application Overview
 The application is for Parrot Wings (PW, “internal money”) transfer between system users.
 The application is very “polite” and informs a user of any problems (i.e. login not successful, not enough PW to remit the transaction, etc.)
 
-User registration 
+# User registration 
 Any person on Earth can register with the service for free, providing their Name (e.g. John Smith), valid email (e.g. jsmith@gmail.com) and password. 
 When a new user registers, the System verifies that the user has provided a unique (not previously registered in the system) email, and has also provided a human name and a password. These 3 fields are mandatory. Password is to be typed twice for justification. No email verification required.
 On successful registration every User will be awarded with 500 (five hundred) PW starting balance.
 
-Logging in
+# Logging in
 Authorization is performed using JSON Web Token.
 Users login to the system using their email and password.
 Users are able to Log out.
 
-PW
+# PW
 The system allows users to perform the following operations:
 - See their Name and current PW balance always on screen
 - Create a new transaction. To make a new transaction (PW payment) a user will
