@@ -1,7 +1,7 @@
 This is a test task.
 Backend for this App can be found on https://github.com/Alexirius/pwAPI-backend-Node
 
-PW Application Overview
+#PW Application Overview
 The application is for Parrot Wings (PW, “internal money”) transfer between system users.
 The application is very “polite” and informs a user of any problems (i.e. login not successful, not enough PW to remit the transaction, etc.)
 
