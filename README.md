@@ -21,11 +21,11 @@ The system allows users to perform the following operations:
 - Create a new transaction. To make a new transaction (PW payment) a user will
   - Choose the recipient by querying the  User list by name (autocomplete). 
   - When a recipient is chosen, entering the PW transaction amount. The system will check that the transaction amount is not greater than the current user balance.
-  - Committing a transaction. Once the transaction succeeds, the recipient account will be credited (PW++) by the entered amount of PW, and the payee account debited (PW--) for the same amount of PW. The system shall display PW balance changes immediately to the user.
-- Review a list (history) of their transactions. A list of transactions shows the most recent transactions on top of the list and display the following info for each transaction:
+  - Committing a transaction. Once the transaction succeeds, the recipient account will be credited (PW++) by the entered amount of PW, and the payee account debited (PW--) for the same amount of PW. The system will display PW balance changes immediately to the user.
+- Review a list (history) of their transactions. A list of transactions shows the most recent transactions on top of the list and displays the following info for each transaction:
   - Date/Time of the transaction
   - Correspondent Name
   - Transaction amount, (Debit/Credit  for PW transferred)
   - Resulting balance
-- Filter sort transaction list by date, correspondent name and amount. 
+- Filter transaction list by date, correspondent name and amount. 
 
